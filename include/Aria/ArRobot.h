@@ -55,18 +55,18 @@ class ArSonarMTX;
 class ArLCDMTX;
 
 /// Central class for communicating with and operating the robot
-/** 
+/**
     This is the most important class. It is used to communicate with
     the robot by sending commands and retrieving data (including
-    wheel odometry, digital and analog inputs, sonar data, and more). 
+    wheel odometry, digital and analog inputs, sonar data, and more).
     It is also used
-    to provide access to objects for controlling attached accessories, 
+    to provide access to objects for controlling attached accessories,
     ArRangeDevice objects, ArAction objects, and others.  For details
     on usage, and how the task cycle and robot state synchronization works,
     see the @ref robot "ArRobot section" and the
     @ref ClientCommands "Commands and Actions section" of the ARIA overview.
 
-    @note In Windows you cannot make an ArRobot object a global variable, 
+    @note In Windows you cannot make an ArRobot object a global variable,
     it will crash because the compiler initializes the constructors in
     the wrong order. You can, however, make a pointer to an ArRobot and then
     allocate it with 'new' at program start.
@@ -100,17 +100,17 @@ public:
   /// Constructor.
   /// @param unused an old flag no longer used
   AREXPORT ArRobot(const char * name = NULL, UNUSED bool unused = true,
-		   bool doSigHandle=true, 
+		   bool doSigHandle=true,
 		   bool normalInit = true, bool addAriaExitCallback = true);
-		   
+
   /// Destructor
   AREXPORT ~ArRobot();
 
   /// Starts the instance to do processing in this thread
-  AREXPORT void run(bool stopRunIfNotConnected, 
+  AREXPORT void run(bool stopRunIfNotConnected,
 		    bool runNonThreaded = false);
   /// Starts the instance to do processing in its own new thread
-  AREXPORT void runAsync(bool stopRunIfNotConnected, 
+  AREXPORT void runAsync(bool stopRunIfNotConnected,
 			 bool runNonThreadedPacketReader = false);
 
   /// @copydoc run(bool, bool)
@@ -127,15 +127,15 @@ public:
 
   /// Stops the robot from doing any more processing
   /// @ingroup easy
-  AREXPORT void stopRunning(bool doDisconnect=true); 
+  AREXPORT void stopRunning(bool doDisconnect=true);
 
   /// Sets the connection this instance uses
   AREXPORT void setDeviceConnection(ArDeviceConnection *connection);
   /// Gets the connection this instance uses
   AREXPORT ArDeviceConnection *getDeviceConnection() const;
-  
+
   /// Questions whether the robot is connected or not
-  /** 
+  /**
       @return true if connected to a robot, false if not
       @ingroup easy
   */
@@ -155,7 +155,7 @@ public:
   /// Sets the state reflection to be inactive (until motion or clearDirectMotion)
   /// @see clearDirectMotion
   AREXPORT void stopStateReflection();
-  
+
 
   /// Enables the motors on the robot
   /// @ingroup easy
@@ -163,6 +163,15 @@ public:
   /// Disables the motors on the robot
   /// @ingroup easy
   AREXPORT void disableMotors();
+
+  /// [TUTOR]
+  /// Enables the Charge Pin on the robot
+  /// @ingroup easy
+  AREXPORT void enableRobotChargePin();
+  /// Disables the Charge Pin on the robot
+  /// @ingroup easy
+  AREXPORT void disableRobotChargePin();
+
 
   /// Enables the sonar on the robot
   /// @ingroup easy
@@ -206,7 +215,7 @@ public:
   /// @ingroup easy
   AREXPORT bool isHeadingDone(double delta = 0.0) const;
   /// sets the difference required for being done with a heading change (e.g. used in isHeadingDone())
-  void setHeadingDoneDiff(double degrees) 
+  void setHeadingDoneDiff(double degrees)
     { myHeadingDoneDiff = degrees; }
   /// Gets the difference required for being done with a heading change (e.g. used in isHeadingDone())
   double getHeadingDoneDiff() const { return myHeadingDoneDiff; }
@@ -224,11 +233,11 @@ public:
   AREXPORT void setStoppedVels(double stoppedVel, double stoppedRotVel,
 			       double stoppedLatVel);
 
-  /// Sets the length of time a direct motion command will take precedence 
+  /// Sets the length of time a direct motion command will take precedence
   /// over actions, in milliseconds
   AREXPORT void setDirectMotionPrecedenceTime(int mSec);
 
-  /// Gets the length of time a direct motion command will take precedence 
+  /// Gets the length of time a direct motion command will take precedence
   /// over actions, in milliseconds
   AREXPORT unsigned int getDirectMotionPrecedenceTime() const;
 
@@ -250,67 +259,67 @@ public:
   /// Returns the type of the robot we are currently connected to
   const char * getRobotType() const { return myRobotType.c_str();}
   /// Returns the subtype of the robot we are currently connected to
-  const char * getRobotSubType() const 
+  const char * getRobotSubType() const
     { return myRobotSubType.c_str(); }
   /// Returns robot serial number, as provided by the config packet. Returns NULL if no config packet was received or there is no serial number.
   const char * getRobotSerialNumber();
 
   /// Gets the robot's absolute maximum translational velocity
-  double getAbsoluteMaxTransVel() const 
+  double getAbsoluteMaxTransVel() const
     { return myAbsoluteMaxTransVel; }
   /// Sets the robot's absolute maximum translational velocity
   AREXPORT bool setAbsoluteMaxTransVel(double maxVel);
 
   /// Gets the robot's absolute maximum translational velocity
-  double getAbsoluteMaxTransNegVel() const 
+  double getAbsoluteMaxTransNegVel() const
     { return myAbsoluteMaxTransNegVel; }
   /// Sets the robot's absolute maximum translational velocity
   AREXPORT bool setAbsoluteMaxTransNegVel(double maxVel);
 
   /// Gets the robot's absolute maximum translational acceleration
-  double getAbsoluteMaxTransAccel() const 
+  double getAbsoluteMaxTransAccel() const
     { return myAbsoluteMaxTransAccel; }
   /// Sets the robot's absolute maximum translational acceleration
   AREXPORT bool setAbsoluteMaxTransAccel(double maxAccel);
 
   /// Gets the robot's absolute maximum translational deceleration
-  double getAbsoluteMaxTransDecel() const 
+  double getAbsoluteMaxTransDecel() const
     { return myAbsoluteMaxTransDecel; }
   /// Sets the robot's absolute maximum translational deceleration
   AREXPORT bool setAbsoluteMaxTransDecel(double maxDecel);
 
   /// Gets the robot's absolute maximum rotational velocity
-  double getAbsoluteMaxRotVel() const 
+  double getAbsoluteMaxRotVel() const
     { return myAbsoluteMaxRotVel; }
   /// Sets the robot's absolute maximum rotational velocity
   AREXPORT bool setAbsoluteMaxRotVel(double maxVel);
-  
+
   /// Gets the robot's absolute maximum rotational acceleration
-  double getAbsoluteMaxRotAccel() const 
+  double getAbsoluteMaxRotAccel() const
     { return myAbsoluteMaxRotAccel; }
   /// Sets the robot's absolute maximum rotational acceleration
   AREXPORT bool setAbsoluteMaxRotAccel(double maxAccel);
 
   /// Gets the robot's absolute maximum rotational deceleration
-  double getAbsoluteMaxRotDecel() const 
+  double getAbsoluteMaxRotDecel() const
     { return myAbsoluteMaxRotDecel; }
   /// Sets the robot's absolute maximum rotational deceleration
   AREXPORT bool setAbsoluteMaxRotDecel(double maxDecel);
 
   /// Gets the robot's absolute maximum lateral velocity
-  double getAbsoluteMaxLatVel() const 
+  double getAbsoluteMaxLatVel() const
     { return myAbsoluteMaxLatVel; }
   /// Sets the robot's absolute maximum lateral velocity
   AREXPORT bool setAbsoluteMaxLatVel(double maxVel);
 
   /// Gets the robot's absolute maximum lateral acceleration
-  double getAbsoluteMaxLatAccel() const 
+  double getAbsoluteMaxLatAccel() const
     { return myAbsoluteMaxLatAccel; }
   /// Sets the robot's absolute maximum lateral acceleration
   AREXPORT bool setAbsoluteMaxLatAccel(double maxAccel);
 
   /// Gets the robot's absolute maximum lateral deceleration
-  double getAbsoluteMaxLatDecel() const 
+  double getAbsoluteMaxLatDecel() const
     { return myAbsoluteMaxLatDecel; }
   /// Sets the robot's absolute maximum lateral deceleration
   AREXPORT bool setAbsoluteMaxLatDecel(double maxDecel);
@@ -324,11 +333,11 @@ public:
    *  moves, and may also be changed by other program components,
    *  such as a localization process (see moveTo()).
    *
-   *  This position is also referred to as the robot's 
+   *  This position is also referred to as the robot's
    *  "odometry" or "odometric" pose, since the robot
    *  uses its odometry data to determine this pose; but it
-   *  may also incorporate additional data sources such as 
-   *  an onboard gyro.  The term "odometric pose" also 
+   *  may also incorporate additional data sources such as
+   *  an onboard gyro.  The term "odometric pose" also
    *  distinguishes this position by the fact that its
    *  coordinate system may be arbitrary, and separate
    *  from any external coordinate system.
@@ -340,17 +349,17 @@ public:
    */
   ArPose getPose() const { return myGlobalPose; }
   /// Gets the global X position of the robot
-  /** @sa getPose() 
+  /** @sa getPose()
       @ingroup easy
   */
   double getX() const { return  myGlobalPose.getX(); }
   /// Gets the global Y position of the robot
-  /** @sa getPose() 
+  /** @sa getPose()
       @ingroup easy
   */
   double getY() const { return myGlobalPose.getY(); }
   /// Gets the global angular position ("theta") of the robot
-  /** @sa getPose() 
+  /** @sa getPose()
       @ingroup easy
   */
   double getTh() const { return myGlobalPose.getTh(); }
@@ -404,7 +413,7 @@ public:
   double getRobotLengthFront() const { return myRobotLengthFront; }
   /// Gets the robot length to the front (in mm)
   double getRobotLengthRear() const { return myRobotLengthRear; }
-  /// Gets distance from center of robot to first vertex of octagon approximating the shape of robot. (mm) 
+  /// Gets distance from center of robot to first vertex of octagon approximating the shape of robot. (mm)
   double getRobotDiagonal() const { return myParams->getRobotDiagonal(); }
   /// Gets the battery voltage of the robot (normalized to 12 volt system)
   /**
@@ -424,12 +433,12 @@ public:
   /**
      This is a value normalized to 12 volts, if you want what the
      actual voltage of the robot is use getRealBatteryVoltage().
-     
+
      @sa getBatteryVoltage()
      @sa getRealBatteryVoltage()
    **/
   double getBatteryVoltageNow() const { return myBatteryVoltage; }
-  /// Gets the real battery voltage of the robot 
+  /// Gets the real battery voltage of the robot
   /**
      This value is averaged over a number of readings, use getRealBatteryVoltageNow() to
      get the value most recently received.  (Access the number of readings
@@ -437,14 +446,14 @@ public:
      setRealBatteryVoltageAverageOfNum().)
 
      This is whatever the actual voltage of the robot is, if you want
-     a value normalized to common 12 volts for all robot types use getBatteryVoltage(). 
+     a value normalized to common 12 volts for all robot types use getBatteryVoltage().
 
      If the robot doesn't support a "real" battery voltage, then
      this method will just return the normal battery voltage (normalized to 12
      volt scale). (Most older robots that don't support a real battery voltage
      have 12 volts batteries anyway.)
    **/
-  double getRealBatteryVoltage() const 
+  double getRealBatteryVoltage() const
     { return myRealBatteryAverager.getAverage(); }
   /// Gets the instantaneous battery voltage
   /**
@@ -459,21 +468,21 @@ public:
   /// @copydoc haveStateOfCharge()
   bool hasStateOfCharge() const { return haveStateOfCharge(); }
   /// Gets the state of charge (percent of charge, as number between 0 and 100)
-  double getStateOfCharge() const 
+  double getStateOfCharge() const
     { if (!myHaveStateOfCharge) return 0; else return myStateOfCharge; }
   /// Gets the last time the state of charge was set
   ArTime getStateOfChargeSetTime() const { return myStateOfChargeSetTime; }
   /// Gets the state of charge that is considered low
-  double getStateOfChargeLow() const 
+  double getStateOfChargeLow() const
     { return myStateOfChargeLow; }
   /// Gets the state of charge (percent of charge, as number between 0 and 100)
-  double getStateOfChargeShutdown() const 
+  double getStateOfChargeShutdown() const
     { return myStateOfChargeShutdown; }
   /// Gets the velocity of the left side of the robot in mm/s (use of getVel() and getRotVel() is preferred instead)
   double getLeftVel() const { return myLeftVel; }
   /// Gets the velocity of the right side of the robot in mm/s (use of getVel() and getRotVel() is preferred instead)
   double getRightVel() const { return myRightVel; }
-  /// Gets the 2 bytes of stall and bumper flags from the robot 
+  /// Gets the 2 bytes of stall and bumper flags from the robot
   /** See robot operations manual SIP packet documentation for details.
    *  @sa isLeftMotorStalled()
    *  @sa isRightMotorStalled()
@@ -483,7 +492,7 @@ public:
    */
   int getStallValue() const { return myStallValue; }
   /// Returns true if the left motor is stalled
-  bool isLeftMotorStalled() const 
+  bool isLeftMotorStalled() const
     { return (myStallValue & 0xff) & ArUtil::BIT0; }
   /// Returns true if the left motor is stalled
   bool isRightMotorStalled() const
@@ -503,10 +512,10 @@ public:
   */
   double getControl() const { return myControl; }
   /// Sets whether to keep the control value raw or not
-  void setKeepControlRaw(bool keepControlRaw) 
+  void setKeepControlRaw(bool keepControlRaw)
     { myKeepControlRaw = keepControlRaw; }
-  /// Gets whether the control value is kept raw 
-  bool getKeepControlRaw() 
+  /// Gets whether the control value is kept raw
+  bool getKeepControlRaw()
     { return myKeepControlRaw; }
   /// Gets the flags values
   int getFlags() const { return myFlags; }
@@ -523,15 +532,15 @@ public:
   /// returns true if the sonars are enabled
   /** This used to just check the low level firmware values, but
    * that's now done by areSonarsEnabledLegacy.
-   */ 
-  bool areSonarsEnabled() const 
+   */
+  bool areSonarsEnabled() const
     { return mySonarEnabled; }
-  /// returns true if the sonars are enabled for autonomous driving 
-  bool areAutonomousDrivingSonarsEnabled() const 
+  /// returns true if the sonars are enabled for autonomous driving
+  bool areAutonomousDrivingSonarsEnabled() const
     { return myAutonomousDrivingSonarEnabled; }
   /// returns true if the sonars are enabled on legacy platforms (by checking the low level stuff)
-  bool areSonarsEnabledLegacy() const { 
-    return (myFlags & 
+  bool areSonarsEnabledLegacy() const {
+    return (myFlags &
 	    (ArUtil::BIT1 | ArUtil::BIT2 | ArUtil::BIT3 | ArUtil::BIT4)); }
   /// returns true if the estop is pressed (or unrelieved)
   bool isEStopPressed() const { return (myFlags & ArUtil::BIT5); }
@@ -607,18 +616,18 @@ public:
   /// Gets whether the robot has front bumpers (see ARCOS parameters in the robot manual)
   bool hasFrontBumpers() const { return myParams->haveFrontBumpers(); }
   /// Get the number of the front bumper switches
-  unsigned int getNumFrontBumpers() const 
+  unsigned int getNumFrontBumpers() const
   {
     assert(myParams->numFrontBumpers() > 0);
-    return (unsigned int)myParams->numFrontBumpers(); 
+    return (unsigned int)myParams->numFrontBumpers();
   }
   /// Gets whether the robot has rear bumpers (see ARCOS parameters in the robot manual)
   bool hasRearBumpers() const { return myParams->haveRearBumpers(); }
   /// Gets the number of  rear bumper switches
-  unsigned int getNumRearBumpers() const 
+  unsigned int getNumRearBumpers() const
   {
     assert(myParams->numRearBumpers() > 0);
-    return (unsigned int) myParams->numRearBumpers(); 
+    return (unsigned int) myParams->numRearBumpers();
   }
 
   /** @brief Get the position of the robot according to the last robot SIP,
@@ -638,12 +647,12 @@ public:
   /** @sa getEncoderPose() */
   double getEncoderTh() const { return myEncoderPose.getTh(); }
 
-  /// Gets if the robot is trying to move or not 
+  /// Gets if the robot is trying to move or not
   /**
      "Trying" to move means that some action or other command has
      requested motion, but another action or factor has cancelled
-     that request. 
-   
+     that request.
+
      This is so that if the robot is trying to move, but is prevented
      (mainly by an action) there will still be some indication that the
      robot is trying to move (e.g. we can prevent the sonar from automatically being
@@ -668,7 +677,7 @@ public:
      @sa isTryingToMove()
    **/
   void forceTryingToMove() { myTryingToMove = true; }
-  
+
 
   /// Gets the number of motor packets received in the last second
   AREXPORT int getMotorPacCount() const;
@@ -700,15 +709,15 @@ public:
 
   /// Change stored pose (i.e. the value returned by getPose())
   AREXPORT void moveTo(ArPose pose, bool doCumulative = true);
-  /// Change stored pose (i.e. the value returned by getPose()) 
+  /// Change stored pose (i.e. the value returned by getPose())
   AREXPORT void moveTo(ArPose to, ArPose from, bool doCumulative = true);
   /// Manually sets the current percentage that the robot is charged (argument is percentage, as a number between 0 and 100)
   AREXPORT void setStateOfCharge(double stateOfCharge);
   /// Sets the state of charge (percentage) that is considered to be low
-  void setStateOfChargeLow(double stateOfChargeLow) 
+  void setStateOfChargeLow(double stateOfChargeLow)
     { myStateOfChargeLow = stateOfChargeLow; }
   /// Sets the state of charge that will cause a shutdown
-  void setStateOfChargeShutdown(double stateOfChargeShutdown) 
+  void setStateOfChargeShutdown(double stateOfChargeShutdown)
     { myStateOfChargeShutdown = stateOfChargeShutdown; }
   /// Sets the charge state (for use with setting the state of charge)
   AREXPORT void setChargeState(ArRobot::ChargeState chargeState);
@@ -720,13 +729,13 @@ public:
   AREXPORT void setIgnoreMicroControllerBatteryInfo(
 	  bool ignoreMicroControllerBatteryInfo);
   /// Sets the battery info
-  AREXPORT void setBatteryInfo(double realBatteryVoltage, 
+  AREXPORT void setBatteryInfo(double realBatteryVoltage,
 			       double normalizedBatteryVoltage,
 			       bool haveStateOfCharge,
 			       double stateOfCharge);
 
   /// Gets the number of readings the battery voltage is the average of
-  size_t getBatteryVoltageAverageOfNum() 
+  size_t getBatteryVoltageAverageOfNum()
     { return myBatteryAverager.getNumToAverage(); }
 
   /// Sets the number of readings the battery voltage is the average of (default 20)
@@ -734,7 +743,7 @@ public:
     { myBatteryAverager.setNumToAverage(numToAverage); }
 
   /// Gets the number of readings the battery voltage is the average of
-  size_t getRealBatteryVoltageAverageOfNum() 
+  size_t getRealBatteryVoltageAverageOfNum()
     { return myRealBatteryAverager.getNumToAverage(); }
 
   /// Sets the number of readings the real battery voltage is the average of (default 20)
@@ -742,9 +751,9 @@ public:
     { myRealBatteryAverager.setNumToAverage(numToAverage); }
 
   /// Returns true if we have a temperature, false otherwise
-  bool hasTemperature() 
+  bool hasTemperature()
     { if (myTemperature != -128) return true; else return false; }
-  
+
   /// Gets the temperature of the robot, -128 if not available, -127 to 127 otherwise
   int getTemperature() const { return myTemperature; }
 
@@ -783,13 +792,13 @@ public:
   AREXPORT void setEncoderTransform(const ArTransform &transform);
 
   /// Sets the encoder pose, for internal use
-  void setEncoderPose(const ArPose& encoderPose) 
+  void setEncoderPose(const ArPose& encoderPose)
     { myEncoderPose = encoderPose; }
 
   /// Sets the raw encoder pose, for internal use
-  void setRawEncoderPose(const ArPose& rawEncoderPose) 
+  void setRawEncoderPose(const ArPose& rawEncoderPose)
     { myRawEncoderPose = rawEncoderPose; }
-  
+
   /// Adds a callback for when the encoder transform is changed
   void addSetEncoderTransformCB(ArFunctor *functor, int position = 50)
     { mySetEncoderTransformCBList.addCallback(functor, position); }
@@ -799,7 +808,7 @@ public:
     { mySetEncoderTransformCBList.remCallback(functor); }
 
   /// Adds a callback that'll be used to see the time on the computer side (for an MTX)
-  void setMTXTimeUSecCB(ArRetFunctor1<bool, 
+  void setMTXTimeUSecCB(ArRetFunctor1<bool,
 					       uint32_t *> *functor)
     { myMTXTimeUSecCB = functor; }
 
@@ -835,8 +844,8 @@ public:
   /// @note This value is not related to the
   /// robot's actual odometry sensor or wheel encoders. For position based on that
   /// plus possible additional correction, see getPose(). For raw encoder count
-  /// data, see requestEncoderPackets() instead. 
-  AREXPORT double getTripOdometerDistance() 
+  /// data, see requestEncoderPackets() instead.
+  AREXPORT double getTripOdometerDistance()
     { return myTripOdometerDistance; }
 
   /// This gets the number of degrees the robot has turned since the last time resetTripOdometer() was called (deg)
@@ -847,14 +856,14 @@ public:
   /// @note This value is not related to the
   /// robot's actual odometry sensor or wheel encoders. For position based on that
   /// plus possible additional correction, see getPose(). For raw encoder count
-  /// data, see requestEncoderPackets() instead. 
+  /// data, see requestEncoderPackets() instead.
   /// @see getTripOdometerDistance()
-  double getTripOdometerDegrees() 
+  double getTripOdometerDegrees()
     { return myTripOdometerDegrees; }
 
   /// This gets the time since the "Trip Odometer" was reset (sec)
   /// @see getTripOdometerDistance()
-  long getTripOdometerTime() 
+  long getTripOdometerTime()
     { return myTripOdometerStart.secSince(); }
 
   /// Resets the "Trip Odometer"
@@ -868,8 +877,8 @@ public:
   /// @note This value is not related to the
   /// robot's actual odometry sensor or wheel encoders. For position based on that
   /// plus possible additional correction, see getPose(). For raw encoder count
-  /// data, see requestEncoderPackets() instead. 
-  double getOdometerDistance() 
+  /// data, see requestEncoderPackets() instead.
+  double getOdometerDistance()
     { return myOdometerDistance; }
   /// @see getOdometerDistance
   double getOdometerDistanceMeters()
@@ -882,17 +891,17 @@ public:
   /// @note This value is not related to the
   /// robot's actual odometry sensor or wheel encoders. For position based on that
   /// plus possible additional correction, see getPose(). For raw encoder count
-  /// data, see requestEncoderPackets() instead. 
-  double getOdometerDegrees() 
+  /// data, see requestEncoderPackets() instead.
+  double getOdometerDegrees()
     { return myOdometerDegrees; }
 
   /// This gets the time since the robot started (sec)
-  long getOdometerTime() 
+  long getOdometerTime()
     { return myOdometerStart.secSince(); }
   /// This gets the time since the robot started (mins)
   double getOdometerTimeMinutes()
     { return (double)myOdometerStart.secSince() / 60.0; }
-  
+
 
 
   /// Adds a rangeDevice to the robot's list of them, and set the ArRangeDevice
@@ -904,11 +913,11 @@ public:
   AREXPORT void remRangeDevice(ArRangeDevice *device);
 
   /// Finds a rangeDevice in the robot's list
-  AREXPORT const ArRangeDevice *findRangeDevice(const char *name, 
+  AREXPORT const ArRangeDevice *findRangeDevice(const char *name,
 						bool ignoreCase = false) const;
 
   /// Finds a rangeDevice in the robot's list
-  AREXPORT ArRangeDevice *findRangeDevice(const char *name, 
+  AREXPORT ArRangeDevice *findRangeDevice(const char *name,
 					  bool ignoreCase = false);
 
   /// Gets the range device list
@@ -940,12 +949,12 @@ public:
   // Goes through all the range devices and checks them
   AREXPORT double checkRangeDevicesCumulativeBox(
 	  double x1, double y1, double x2, double y2,
-	  ArPose *readingPos = NULL, 
+	  ArPose *readingPos = NULL,
 	  const ArRangeDevice **rangeDevice = NULL,
 	  bool useLocationDependentDevices = true) const;
 
   /// Adds a laser to the robot's map of them
-  AREXPORT bool addLaser(ArLaser *laser, int laserNumber, 
+  AREXPORT bool addLaser(ArLaser *laser, int laserNumber,
 			 bool addAsRangeDevice = true);
   /// Remove a range device from the robot's list, by instance
   AREXPORT bool remLaser(ArLaser *laser, bool removeAsRangeDevice = true);
@@ -1039,23 +1048,23 @@ public:
 #endif
 
   /// Finds a lcd in the robot's list (@a lcdNumber indices start at 1)
-  /// (MTX robots only) 
+  /// (MTX robots only)
   AREXPORT const ArLCDMTX *findLCD(int lcdNumber = 1) const;
 
   /// Finds a lcd in the robot's list (@a lcdNumber indices start at 1)
-  /// (MTX robots only) 
+  /// (MTX robots only)
   AREXPORT ArLCDMTX *findLCD(int lcdNumber = 1);
 
   /// Gets the lcd list
-  /// (MTX robots only) 
+  /// (MTX robots only)
   AREXPORT const std::map<int, ArLCDMTX *> *getLCDMap() const;
 
   /// Gets the lcd list
-  /// (MTX robots only) 
+  /// (MTX robots only)
   AREXPORT std::map<int, ArLCDMTX *> *getLCDMap();
 
   /// Finds whether a particular lcd is attached to this robot or not
-  /// (MTX robots only) 
+  /// (MTX robots only)
   AREXPORT bool hasLCD(ArLCDMTX *device) const;
 
 
@@ -1098,48 +1107,48 @@ public:
   ArPTZ *getPTZ() { return myPtz; }
 
   /// Sets the number of milliseconds between state reflection refreshes
-  /// if the state has not changed 
+  /// if the state has not changed
   AREXPORT void setStateReflectionRefreshTime(int msec);
 
   /// Gets the number of milliseconds between state reflection refreshes
-  /// if the state has not changed 
+  /// if the state has not changed
   AREXPORT int getStateReflectionRefreshTime() const;
 
   /// Adds a packet handler to the list of packet handlers
   AREXPORT void addPacketHandler(
-	  ArRetFunctor1<bool, ArRobotPacket *> *functor, 
+	  ArRetFunctor1<bool, ArRobotPacket *> *functor,
 	  ArListPos::Pos position = ArListPos::LAST);
-  
+
   /// Removes a packet handler from the list of packet handlers
   AREXPORT void remPacketHandler(
 	  ArRetFunctor1<bool, ArRobotPacket *> *functor);
 
   /// Adds a connect callback
-  AREXPORT void addConnectCB(ArFunctor *functor, 
+  AREXPORT void addConnectCB(ArFunctor *functor,
 			     ArListPos::Pos position = ArListPos::LAST);
   /// Removes a connect callback
   AREXPORT void remConnectCB(ArFunctor *functor);
 
   /// Adds a callback for when a connection to the robot is failed
-  AREXPORT void addFailedConnectCB(ArFunctor *functor, 
+  AREXPORT void addFailedConnectCB(ArFunctor *functor,
 				   ArListPos::Pos position = ArListPos::LAST);
   /// Removes a callback for when a connection to the robot is failed
   AREXPORT void remFailedConnectCB(ArFunctor *functor);
 
   /// Adds a callback for when disconnect is called while connected
-  AREXPORT void addDisconnectNormallyCB(ArFunctor *functor, 
+  AREXPORT void addDisconnectNormallyCB(ArFunctor *functor,
 				ArListPos::Pos position = ArListPos::LAST);
   /// Removes a callback for when disconnect is called while connected
   AREXPORT void remDisconnectNormallyCB(ArFunctor *functor);
-  
+
   /// Adds a callback for when disconnection happens because of an error
-  AREXPORT void addDisconnectOnErrorCB(ArFunctor *functor, 
+  AREXPORT void addDisconnectOnErrorCB(ArFunctor *functor,
 				   ArListPos::Pos position = ArListPos::LAST);
   /// Removes a callback for when disconnection happens because of an error
   AREXPORT void remDisconnectOnErrorCB(ArFunctor *functor);
 
   /// Adds a callback for when the run loop exits for what ever reason
-  AREXPORT void addRunExitCB(ArFunctor *functor, 
+  AREXPORT void addRunExitCB(ArFunctor *functor,
 			     ArListPos::Pos position = ArListPos::LAST);
   /// Removes a callback for when the run loop exits for what ever reason
   AREXPORT void remRunExitCB(ArFunctor *functor);
@@ -1163,7 +1172,7 @@ public:
   AREXPORT void wakeAllRunExitWaitingThreads();
 
   /// Adds a user task to the list of synchronous tasks
-  AREXPORT bool addUserTask(const char *name, int position, 
+  AREXPORT bool addUserTask(const char *name, int position,
 			       ArFunctor *functor,
 			       ArTaskState::State *state = NULL);
 
@@ -1172,7 +1181,7 @@ public:
     return addUserTask(name, position, functor);
   }
 
-  
+
   bool addUserTask(ArFunctor& functor, const char *name = NULL, int position = ArListPos::LAST)
   {
     return addUserTask(name, position, &functor);
@@ -1187,7 +1196,7 @@ public:
   AREXPORT ArSyncTask *findUserTask(const char *name);
   /// Finds a user task by functor
   AREXPORT ArSyncTask *findUserTask(ArFunctor *functor);
-  
+
   /// Logs the list of user tasks, strictly for your viewing pleasure
   AREXPORT void logUserTasks() const;
   /// Logs the list of all tasks, strictly for your viewing pleasure
@@ -1196,7 +1205,7 @@ public:
   /// Adds a sensor interpretation task. These are called during the ArRobot
   /// task synchronous cycle after robot data has been received (from the SIP
   /// and other robot packets).
-  AREXPORT bool addSensorInterpTask(const char *name, int position, 
+  AREXPORT bool addSensorInterpTask(const char *name, int position,
 				       ArFunctor *functor,
 	       			       ArTaskState::State *state = NULL);
 
@@ -1205,7 +1214,7 @@ public:
     return addSensorInterpTask(name, position, functor);
   }
 
-  
+
   bool addSensorInterpTask(ArFunctor& functor, const char *name = NULL, int position = ArListPos::LAST)
   {
     return addSensorInterpTask(name, position, &functor);
@@ -1221,7 +1230,7 @@ public:
   /// Finds a task by functor
   AREXPORT ArSyncTask *findTask(ArFunctor *functor);
 
-  /// Adds an action to the list with the given priority 
+  /// Adds an action to the list with the given priority
   /// @ingroup easy
   AREXPORT bool addAction(ArAction *action, int priority);
   /// Removes an action from the list, by pointer
@@ -1257,9 +1266,9 @@ public:
   /// Gets the encoderCorrectionCallback
   AREXPORT ArRetFunctor1<double, ArPoseWithTime> *
           getEncoderCorrectionCallback() const;
-  
+
   /// Gets the time the connection to the robot was made
-  ArTime getConnectionOpenedTime() const 
+  ArTime getConnectionOpenedTime() const
     { return myConnectionOpenedTime; }
 
   // set up some of the internals of how the ArRobot class works
@@ -1278,7 +1287,7 @@ public:
   /// Gets the multiplier for how many cycles ArRobot waits when connecting
   AREXPORT unsigned int getConnectionCycleMultiplier() const;
   void setAsyncConnectSyncPacketRetries(int t) { myAsyncConnectSyncPacketRetries = t; }
-  
+
   /// Sets whether to chain the robot cycle to when we get in SIP packets
   void setCycleChained(bool cycleChained) { myCycleChained = cycleChained; }
   /// Gets whether we chain the robot cycle to when we get in SIP packets
@@ -1293,16 +1302,16 @@ public:
   AREXPORT ArTime getLastOdometryTime();
 
   /// Sets the number of packets back in time the ArInterpolation goes
-  void setPoseInterpNumReadings(size_t numReadings) 
+  void setPoseInterpNumReadings(size_t numReadings)
     { myInterpolation.setNumberOfReadings(numReadings); }
 
   /// Sets the number of packets back in time the position interpol goes
   size_t getPoseInterpNumReadings() const
     { return myInterpolation.getNumberOfReadings(); }
-  
-  
+
+
   /// Gets the position the robot was at at the given timestamp
-  /** @see ArInterpolation::getPose 
+  /** @see ArInterpolation::getPose
    */
   int getPoseInterpPosition(ArTime timeStamp, ArPose *position,
 				     ArPoseWithTime *mostRecent = NULL)
@@ -1315,12 +1324,12 @@ public:
   /// Gets the callback that will call getPoseInterpPosition
   ArRetFunctor3<int, ArTime, ArPose *, ArPoseWithTime *> *
   getPoseInterpPositionCallback()
-  { 
-    return &myPoseInterpPositionCB; 
+  {
+    return &myPoseInterpPositionCB;
   }
 
   /// Sets the number of packets back in time the ArInterpolation goes for encoder readings
-  void setEncoderPoseInterpNumReadings(size_t numReadings) 
+  void setEncoderPoseInterpNumReadings(size_t numReadings)
     { myEncoderInterpolation.setNumberOfReadings(numReadings); }
 
   /// Sets the number of packets back in time the encoder position interpolation goes
@@ -1328,9 +1337,9 @@ public:
     { return myEncoderInterpolation.getNumberOfReadings(); }
 
   /// Gets the encoder position the robot was at at the given timestamp
-  /** @see ArInterpolation::getPose 
+  /** @see ArInterpolation::getPose
    */
-  int getEncoderPoseInterpPosition(ArTime timeStamp, ArPose *position, 
+  int getEncoderPoseInterpPosition(ArTime timeStamp, ArPose *position,
 					    ArPoseWithTime *mostRecent = NULL)
     { return myEncoderInterpolation.getPose(timeStamp, position, mostRecent); }
 
@@ -1340,12 +1349,12 @@ public:
   /// Gets the callback that will call getPoseInterpPosition
   ArRetFunctor3<int, ArTime, ArPose *, ArPoseWithTime *> *
   getEncoderPoseInterpPositionCallback()
-  { 
-    return &myEncoderPoseInterpPositionCB; 
+  {
+    return &myEncoderPoseInterpPositionCB;
   }
 
   /// Applies the encoder motion from the passed in ArPoseWithTime to the passed in ArTime
-  AREXPORT int applyEncoderOffset(ArPoseWithTime from, ArTime to, 
+  AREXPORT int applyEncoderOffset(ArPoseWithTime from, ArTime to,
 				  ArPose *result);
 
   /// Gets the Counter for the time through the loop
@@ -1354,7 +1363,7 @@ public:
   /// Gets the parameters the robot is using
   AREXPORT const ArRobotParams *getRobotParams() const;
 
-  /// Sets if a config packet is required or not... 
+  /// Sets if a config packet is required or not...
   /** By default it is not required, since some ancient robots have no
       config packets... some of the modern software may die hideously
       if there is no config packet, so you should set this to true if
@@ -1368,7 +1377,7 @@ public:
   AREXPORT const ArRobotConfigPacketReader *getOrigRobotConfig() const;
 
   /// Gets the battery packet reader
-  ArRobotBatteryPacketReader *getBatteryPacketReader() 
+  ArRobotBatteryPacketReader *getBatteryPacketReader()
     { return myBatteryPacketReader; }
 
   /// Sets the maximum translational velocity
@@ -1393,7 +1402,7 @@ public:
   AREXPORT void setLatDecel(double decel);
 
   /// If the robot has settable maximum velocities
-  bool hasSettableVelMaxes() const 
+  bool hasSettableVelMaxes() const
     { return myParams->hasSettableVelMaxes(); }
   /// Gets the maximum translational velocity
   AREXPORT double getTransVelMax() const;
@@ -1456,12 +1465,12 @@ public:
 
 
   /// Adds a callback called when the robot starts stabilizing before declaring connection
-  AREXPORT void addStabilizingCB(ArFunctor *functor, 
+  AREXPORT void addStabilizingCB(ArFunctor *functor,
 			     ArListPos::Pos position = ArListPos::LAST);
   /// Removes stabilizing callback
   AREXPORT void remStabilizingCB(ArFunctor *functor);
-  
-  /// This gets the root of the synchronous task tree, only serious 
+
+  /// This gets the root of the synchronous task tree, only serious
   /// developers should use it
   AREXPORT ArSyncTask *getSyncTaskRoot();
 
@@ -1497,10 +1506,10 @@ public:
     { myLogMovementReceived = logMovementReceived; }
 
   /// Gets if we're logging all the velocities (and heading) received
-  bool getLogVelocitiesReceived() 
+  bool getLogVelocitiesReceived()
     { return myLogVelocitiesReceived; }
   /// Sets if we're logging all the velocities (and heading) received
-  void setLogVelocitiesReceived(bool logVelocitiesReceived) 
+  void setLogVelocitiesReceived(bool logVelocitiesReceived)
     { myLogVelocitiesReceived = logVelocitiesReceived; }
 
   /// Gets if we're logging all the packets received (just times and types)
@@ -1519,12 +1528,12 @@ public:
     { return myPacketsSentTracking; }
   /// Sets if we're logging all the packets sent and their payloads
   void setPacketsSentTracking(bool packetsSentTracking)
-		{ 
+		{
 		if (packetsSentTracking)
 			ArLog::log(ArLog::Normal, "ArRobot: tracking packets sent");
 		else
 			ArLog::log(ArLog::Normal, "ArRobot: not tracking packets sent");
-		myPacketsSentTracking = packetsSentTracking; 
+		myPacketsSentTracking = packetsSentTracking;
 		}
 
   /// Gets if we're logging all the actions as they happen
@@ -1534,15 +1543,15 @@ public:
   { myLogActions = logActions; }
 
 
-    
+
 
   /// Sets the flag that controls if the robot will switch baud rates
   void setDoNotSwitchBaud(bool doNotSwitchBaud = true)
-    { myDoNotSwitchBaud = doNotSwitchBaud; } 
+    { myDoNotSwitchBaud = doNotSwitchBaud; }
 
   /// Gets the flag that controls if the robot won't switch baud rates
   bool getDoNotSwitchBaud() { return myDoNotSwitchBaud; }
-  
+
 #ifndef ARIA_WRAPPER
   /// This is only for use by syncLoop
   /// @internal
@@ -1580,8 +1589,8 @@ public:
   /// @internal
   void keyHandlerExit();
 
-  /// Processes a motor packet, internal 
-  /// @internal 
+  /// Processes a motor packet, internal
+  /// @internal
   bool processMotorPacket(ArRobotPacket *packet);
   /// Processes a new sonar reading, internal
   /// @internal
@@ -1592,7 +1601,7 @@ public:
   /// Processes a new IO packet, internal
   /// @internal
   bool processIOPacket(ArRobotPacket *packet);
-  
+
   /// Internal function, shouldn't be used
   /// @internal
   void init();
@@ -1670,7 +1679,7 @@ public:
   /** @brief Get the position of the robot according to the last robot SIP only,
    *  with no correction by the gyro, other devices or software proceses.
    *
-   * @note For the most accurate pose, use getPose() or getEncoderPose(); 
+   * @note For the most accurate pose, use getPose() or getEncoderPose();
    * only use this method if you must have raw encoder pose with no correction.
    * @sa getPose()
    * @sa getEncoderPose()
@@ -1678,10 +1687,10 @@ public:
   ArPose getRawEncoderPose() const { return myRawEncoderPose; }
 
   /// Internal function for sync loop and sync task to see if we should warn this cycle or not
-  bool getNoTimeWarningThisCycle()  
+  bool getNoTimeWarningThisCycle()
     { return myNoTimeWarningThisCycle; }
   /// Internal function for sync loop and sync task to say if we should warn this cycle or not
-  void setNoTimeWarningThisCycle(bool noTimeWarningThisCycle)  
+  void setNoTimeWarningThisCycle(bool noTimeWarningThisCycle)
     { myNoTimeWarningThisCycle = noTimeWarningThisCycle; }
 
 protected:
@@ -1694,7 +1703,7 @@ protected:
 public:
   /// internal call that will let the robot connect even if it can't find params
   /// @internal
-  void setConnectWithNoParams(bool connectWithNoParams) 
+  void setConnectWithNoParams(bool connectWithNoParams)
     { myConnectWithNoParams = connectWithNoParams; }
   /// Internal call that will get the thread the robot is running in
   /// @internal
@@ -1723,7 +1732,7 @@ protected:
   // Sets a flag to ignore the next packet handled, for very internal usage
   void internalIgnoreNextPacket();
 protected:
-  enum RotDesired { 
+  enum RotDesired {
     ROT_NONE,
     ROT_IGNORE,
     ROT_HEADING,
@@ -1743,7 +1752,7 @@ protected:
     LAT_VEL
   };
   void reset();
- 
+
 
   // the config the robot had at connection
   ArRobotConfigPacketReader *myOrigRobotConfig;
@@ -1836,7 +1845,7 @@ protected:
 
   std::map<int, ArSensorReading *> mySonars;
   int myNumSonar;
-  
+
   unsigned int myCounter;
   bool myIsConnected;
   bool myIsStabilizing;
@@ -1916,7 +1925,7 @@ protected:
   ArTime myLastPulseSent;
 
   unsigned int myDirectPrecedenceTime;
-  
+
   int myStateReflectionRefreshTime;
 
   ArActionDesired myActionDesired;
@@ -2027,7 +2036,7 @@ protected:
   bool myOverriddenChargeState;
   bool myIsChargerPowerGood;
   bool myOverriddenIsChargerPowerGood;
-  
+
   char myTemperature;
 
   double myTripOdometerDistance;
@@ -2037,17 +2046,17 @@ protected:
   double myOdometerDistance;
   double myOdometerDegrees;
   ArTime myOdometerStart;
-  
+
   int myOdometryDelay;
 
   bool myDoNotSwitchBaud;
-  
+
   bool myAddedAriaExitCB;
   ArFunctorC<ArRobot> myAriaExitCB;
 
-  ArRetFunctor3C<int, ArRobot, ArTime, ArPose *, 
+  ArRetFunctor3C<int, ArRobot, ArTime, ArPose *,
 		 ArPoseWithTime *> myPoseInterpPositionCB;
-  ArRetFunctor3C<int, ArRobot, ArTime, ArPose *, 
+  ArRetFunctor3C<int, ArRobot, ArTime, ArPose *,
 		 ArPoseWithTime *> myEncoderPoseInterpPositionCB;
 
 };

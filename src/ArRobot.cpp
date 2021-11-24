@@ -53,9 +53,9 @@ Copyright (C) 2016-2018 Omron Adept Technologies, Inc.
  * The parameters only rarely need to be specified.
  *
  * @param name A name for this robot, useful if a program has more than one
- *  ArRobot object 
+ *  ArRobot object
 
- 
+
    @param obsolete This parameter is ignored.
    (It used to turn off state reflection if false, but that
    is no longer possible.)
@@ -69,12 +69,12 @@ Copyright (C) 2016-2018 Omron Adept Technologies, Inc.
    then overriding will probably be more useful, but there it is.
 
    @param addAriaExitCallback If true (default), add callback to global Aria class
-    to stop running the processing loop and disconnect from robot 
+    to stop running the processing loop and disconnect from robot
     when Aria::exit() is called. If false, do not disconnect on Aria::exit()
 
 **/
 
-AREXPORT ArRobot::ArRobot(const char *name, UNUSED bool unused, 
+AREXPORT ArRobot::ArRobot(const char *name, UNUSED bool unused,
 			  bool doSigHandle, bool normalInit,
 			  bool addAriaExitCallback) :
   myMotorPacketCB(this, &ArRobot::processMotorPacket),
@@ -176,11 +176,11 @@ AREXPORT ArRobot::ArRobot(const char *name, UNUSED bool unused,
 
   myOrigRobotConfig = NULL;
   myBatteryPacketReader = NULL;
-	
+
   reset();
   if (normalInit)
     init();
-  
+
   mySyncLoop.setRobot(this);
   myPacketReader.setRobot(this);
 
@@ -261,7 +261,7 @@ AREXPORT void ArRobot::run(bool stopRunIfNotConnected, bool runNonThreaded)
 {
   if (mySyncLoop.getRunning())
   {
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
 	       "The robot is already running, cannot run it again.");
     return;
   }
@@ -278,13 +278,13 @@ AREXPORT void ArRobot::run(bool stopRunIfNotConnected, bool runNonThreaded)
 }
 
 /**
-   @return true if the robot is currently running in a run or runAsync, 
+   @return true if the robot is currently running in a run or runAsync,
    otherwise false
 **/
 
 AREXPORT bool ArRobot::isRunning() const
 {
-  return (mySyncLoop.getRunning() && 
+  return (mySyncLoop.getRunning() &&
 	  (myRunningNonThreaded || myPacketReader.getRunning()));
 }
 
@@ -292,8 +292,8 @@ AREXPORT bool ArRobot::isRunning() const
    This starts a new thread then has runs through the tasks until stopped.
    This function doesn't return until something calls stop on this instance.
    This function returns immediately
-   @param stopRunIfNotConnected if true, the run will stop if there is no 
-   connection to the robot at any given point, this is good for one-shot 
+   @param stopRunIfNotConnected if true, the run will stop if there is no
+   connection to the robot at any given point, this is good for one-shot
    programs. If  false then the thread will continue until stopRunning() is called.
    @param runNonThreadedPacketReader selects whether the packet reader object
 (receives and parses packets from the robot) should run in its own internal
@@ -307,7 +307,7 @@ AREXPORT void ArRobot::runAsync(bool stopRunIfNotConnected, bool runNonThreadedP
 {
   if (mySyncLoop.getRunning())
   {
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
 	       "The robot is already running, cannot run it again.");
     return;
   }
@@ -338,8 +338,8 @@ AREXPORT void ArRobot::runAsync(bool stopRunIfNotConnected, bool runNonThreadedP
    This stops this robot's processing cycle.  If it is running
    in a background thread (from runAsync()), it will cause that thread
    to exit.  If it is running synchronously (from run()), then run() will
-   return.  
-   @param doDisconnect If true, also disconnect from the robot connection (default is true). 
+   return.
+   @param doDisconnect If true, also disconnect from the robot connection (default is true).
    @sa isRunning
 **/
 AREXPORT void ArRobot::stopRunning(bool doDisconnect)
@@ -431,7 +431,7 @@ void ArRobot::reset()
   myAbsoluteMaxLatVel = 0;
   myAbsoluteMaxLatAccel = 0;
   myAbsoluteMaxLatDecel = 0;
-  
+
 
   myLeftVel = 0;
   myRightVel = 0;
@@ -577,7 +577,7 @@ AREXPORT void ArRobot::setTransAccel(double acc)
     ArLog::log(ArLog::Terse, "ArRobot: setTransAccel of %g is below 0, ignoring it", acc);
     return;
   }
-  
+
   if (acc > myAbsoluteMaxTransAccel)
   {
     ArLog::log(ArLog::Terse, "ArRobot: setTransAccel of %g is over the absolute max of %g, capping it", acc, myAbsoluteMaxTransAccel);
@@ -792,14 +792,14 @@ AREXPORT ArDeviceConnection *ArRobot::getDeviceConnection() const
 
    @param mSecs if seconds is 0 then the connection timeout feature
    will be disabled, otherwise disconnect on error will be triggered
-   after this number of seconds...  
+   after this number of seconds...
 **/
 AREXPORT void ArRobot::setConnectionTimeoutTime(int mSecs)
 {
   myConnectionTimeoutMutex.lock();
 
-  ArLog::log(ArLog::Normal, 
-	     "ArRobot::setConnectionTimeoutTime: Setting timeout to %d mSecs", 
+  ArLog::log(ArLog::Normal,
+	     "ArRobot::setConnectionTimeoutTime: Setting timeout to %d mSecs",
 	     mSecs);
 
   myLastOdometryReceivedTime.setToNow();
@@ -819,7 +819,7 @@ AREXPORT void ArRobot::setConnectionTimeoutTime(int mSecs)
    broken and the disconnect on error events will happen.
 
 **/
-AREXPORT int ArRobot::getConnectionTimeoutTime() 
+AREXPORT int ArRobot::getConnectionTimeoutTime()
 {
   myConnectionTimeoutMutex.lock();
   int ret = myTimeoutTime;
@@ -834,7 +834,7 @@ AREXPORT int ArRobot::getConnectionTimeoutTime()
 
    @return the time the last packet was received
 **/
-AREXPORT ArTime ArRobot::getLastPacketTime() 
+AREXPORT ArTime ArRobot::getLastPacketTime()
 {
   myConnectionTimeoutMutex.lock();
   ArTime ret = myLastPacketReceivedTime;
@@ -852,7 +852,7 @@ AREXPORT ArTime ArRobot::getLastPacketTime()
 
    @return the time the last SIP was received
 **/
-AREXPORT ArTime ArRobot::getLastOdometryTime() 
+AREXPORT ArTime ArRobot::getLastOdometryTime()
 {
   myConnectionTimeoutMutex.lock();
   ArTime ret = myLastOdometryReceivedTime;
@@ -861,9 +861,9 @@ AREXPORT ArTime ArRobot::getLastOdometryTime()
 }
 
 
-/** 
+/**
     Sets up the robot to connect, then returns, but the robot must be
-    running (ie from runAsync) before you do this.  
+    running (ie from runAsync) before you do this.
 
     Most programs should use ArRobotConnector to perform the connection
     rather than using thin method directly.
@@ -901,16 +901,16 @@ AREXPORT bool ArRobot::asyncConnect()
 {
   if (!mySyncLoop.getRunning() || isConnected())
     return false;
-  
+
   myAsyncConnectFlag = true;
   myBlockingConnectRun = false;
   myAsyncConnectState = -1;
   return true;
 }
 
-/** 
+/**
     Connects to the robot, returning only when a connection has been
-    made or it has been established a connection can't be made.  
+    made or it has been established a connection can't be made.
 
     Most programs should use an ArRobotConnector object to perform
     the connection rather than using this method directly.
@@ -939,7 +939,7 @@ AREXPORT bool ArRobot::asyncConnect()
     again, and so that it won't mess up the sync loop by blocking for
     so long).
 
-    @return true if a connection could be made, false otherwise 
+    @return true if a connection could be made, false otherwise
 
 **/
 
@@ -962,10 +962,10 @@ AREXPORT bool ArRobot::blockingConnect(bool tryHarderToConnect)
 }
 
 /**
-   This is an internal function that is used both for async connects and 
+   This is an internal function that is used both for async connects and
    blocking connects use to connect.  It does about the same thing for both,
    and it should only be used by asyncConnect and blockingConnect really.
-   But here it is.  The only difference between when its being used 
+   But here it is.  The only difference between when its being used
    by blocking/async connect is that in blocking mode if it thinks there
    may be problems with the radio modem it pauses for two seconds trying
    to deal with this... whereas in async mode it tries to deal with this in a
@@ -973,8 +973,8 @@ AREXPORT bool ArRobot::blockingConnect(bool tryHarderToConnect)
    @param tryHarderToConnect if this is true, then attempt to recover from robot
       not responding because of a previoous connection still open, to reset
       synchronization process if it was interrupted or corrupted.  Normally this
-      should be true, but in some types of tools, passing false can save some time if 
-      a robot connection is not required. 
+      should be true, but in some types of tools, passing false can save some time if
+      a robot connection is not required.
    @return 0 if its still trying to connect, 1 if it connected, 2 if it failed
    @internal
 **/
@@ -994,7 +994,7 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
 
   endTime.setToNow();
   endTime.addMSec(getCycleTime()*myConnectionCycleMultiplier);
-  
+
   myNoTimeWarningThisCycle = true;
 
   // if this is -1, then we're doing initialization stuff, then returning
@@ -1010,14 +1010,14 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
       failedConnect();
       return 2;
     }
-    
-    if (myConn->getStatus() != ArDeviceConnection::STATUS_OPEN) 
+
+    if (myConn->getStatus() != ArDeviceConnection::STATUS_OPEN)
     {
       if (!myConn->openSimple())
       {
 	/*str = myConn->getStatusMessage(myConn->getStatus());
 	  ArLog::log(ArLog::Terse, "Trying to connect to robot but connection not opened, it is %s", str.c_str());*/
-        ArLog::log(ArLog::Terse, 
+        ArLog::log(ArLog::Terse,
                    "Could not connect, because open on the device connection failed.");
         failedConnect();
         return 2;
@@ -1045,11 +1045,11 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
     while ((packet = myReceiver.receivePacket(0)) != NULL)
     {
       //printf("0x%x\n", packet->getID());
-      for (handled = false, it = myPacketHandlerList.begin(); 
-	   it != myPacketHandlerList.end() && handled == false; 
+      for (handled = false, it = myPacketHandlerList.begin();
+	   it != myPacketHandlerList.end() && handled == false;
 	   it++)
       {
-	if ((*it) != NULL && (*it)->invokeR(packet)) 
+	if ((*it) != NULL && (*it)->invokeR(packet))
 	  handled = true;
 	else
 	  packet->resetRead();
@@ -1066,7 +1066,7 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
     }
     // if we've gotten our config packet or if we've timed out then
     // set our vel and acc/decel params and skip to the next part
-    if (myOrigRobotConfig->hasPacketArrived() || 
+    if (myOrigRobotConfig->hasPacketArrived() ||
 	myAsyncStartedConnection.mSecSince() > 1000)
     {
       bool gotConfig;
@@ -1172,11 +1172,11 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
     // we shouldn't change the baud or if we'd change it to a slower
     // baud rate or we aren't using a serial port then don't switch
     // the baud
-    if (!myOrigRobotConfig->hasPacketArrived() || 
-	!myOrigRobotConfig->getResetBaud() || 
+    if (!myOrigRobotConfig->hasPacketArrived() ||
+	!myOrigRobotConfig->getResetBaud() ||
 	serConn == NULL ||
-	myParams->getSwitchToBaudRate() == 0 || 
-	(serConn != NULL && 
+	myParams->getSwitchToBaudRate() == 0 ||
+	(serConn != NULL &&
 	 serConn->getBaud() >= myParams->getSwitchToBaudRate()) ||
 	myDoNotSwitchBaud)
     {
@@ -1193,7 +1193,7 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
 	myAsyncConnectStartBaud = serConn->getBaud();
 
       int baudNum = -1;
-      
+
       // first suck up all the packets we have now
       while ((packet = myReceiver.receivePacket(0)) != NULL);
       if (myParams->getSwitchToBaudRate() == 9600)
@@ -1249,14 +1249,14 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
       }
       else
 	return 0;
-    }    
+    }
   }
 
   if (myAsyncConnectState == 5)
   {
     if (!myIsStabilizing)
       startStabilization();
-    if (myStabilizingTime == 0 || 
+    if (myStabilizingTime == 0 ||
 	myStartedStabilizing.mSecSince() > myStabilizingTime)
     {
       finishedConnection();
@@ -1267,20 +1267,20 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
   }
 
   // here we've gone beyond the initialization, so read set a time limit,
-  // read in one packet, then if its a bad packet type, read in all the 
+  // read in one packet, then if its a bad packet type, read in all the
   // packets there are to read... if its a good packet, continue with sequence
   myAsyncConnectTimesTried++;
   ArLog::log(ArLog::Normal, "Syncing %d", myAsyncConnectState);
   mySender.com((unsigned char)myAsyncConnectState);
   //  packet = myReceiver.receivePacket(endTime.mSecTo());
   packet = myReceiver.receivePacket(1000);
-  
-  if (packet != NULL) 
+
+  if (packet != NULL)
   {
     ret = packet->getID();
 
     //printf("Got a packet %d\n", ret);
-	
+
     if (ret == 50 && tryHarderToConnect)
     {
       ArLog::log(ArLog::Normal, "Attempting to close previous connection.");
@@ -1297,7 +1297,7 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
 	  comInt(ArCommands::CLOSE,1);
       }
       myAsyncConnectState = 0;
-    } 
+    }
     else if (ret == 255 && tryHarderToConnect)
     {
       ArLog::log(ArLog::Normal, "Attempting to correct syncCount");
@@ -1319,13 +1319,13 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
       else
 	myAsyncConnectState = 0;
       return 0;
-    } 
+    }
     else if  (ret != myAsyncConnectState++)
     {
       myAsyncConnectState = 0;
     }
   }
-  else 
+  else
   {
     ArLog::log(ArLog::Normal, "No packet.");
     myAsyncConnectNoPacketCount++;
@@ -1338,14 +1338,14 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
       return 2;
     }
 
-      /* This code to connect the radio modems should never really be needed 
+      /* This code to connect the radio modems should never really be needed
 	 so is being removed for now
 	 if (myAsyncConnectNoPacketCount >= 4)
 	 {
-	 
+
 	 if (tryHarderToConnect && dynamic_cast<ArSerialConnection *>(myConn))
 	 {
-	 ArLog::log(ArLog::Normal, 
+	 ArLog::log(ArLog::Normal,
 	 "Radio modem may not connected, trying to connect it.");
 	 ArUtil::sleep(1000);
 	 myConn->write("|||\15", strlen("!!!\15"));
@@ -1354,7 +1354,7 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
 	 ArUtil::sleep(60);
 	 myConn->write("WMS2\15", strlen("WMS2\15"));
 	 ArUtil::sleep(1000);
-	 } 
+	 }
 	 else if (dynamic_cast<ArSerialConnection *>(myConn))
 	 {
 	 ArLog::log(ArLog::Normal,
@@ -1364,10 +1364,10 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
 	 }
 	 }
       */
-    
+
     // If we get no response first we dump close commands at the thing
     // in different bauds (if its a serial connection)
-    if (myAsyncConnectNoPacketCount == 2 && 
+    if (myAsyncConnectNoPacketCount == 2 &&
 	myAsyncConnectNoPacketCount >= myAsyncConnectTimesTried &&
 	(serConn = dynamic_cast<ArSerialConnection *>(myConn)) != NULL &&
   tryHarderToConnect)
@@ -1399,12 +1399,12 @@ int ArRobot::asyncConnectHandler(bool tryHarderToConnect)
 		 " Robot may be connected but not open, trying to dislodge.");
       mySender.comInt(ArCommands::OPEN,1);
     }
-    
+
     myAsyncConnectState = 0;
   }
   // if we've connected and have a packet get the connection
   // information from it
-  if (myAsyncConnectState == 3 && packet != NULL) 
+  if (myAsyncConnectState == 3 && packet != NULL)
   {
     char nameBuf[512];
     ArLog::log(ArLog::Terse, "Connected to robot.");
@@ -1494,7 +1494,7 @@ void ArRobot::processParamFile()
 			ArLog::log(ArLog::Verbose,"ArRobot::processParamFile creating new sonar %d %d %d %d", i, myParams->getSonarX(i),
 									myParams->getSonarY(i), myParams->getSonarTh(i));
       mySonars[i] = new ArSensorReading(myParams->getSonarX(i),
-					myParams->getSonarY(i), 
+					myParams->getSonarY(i),
 					myParams->getSonarTh(i));
       mySonars[i]->setIgnoreThisReading(true);
     }
@@ -1503,7 +1503,7 @@ void ArRobot::processParamFile()
 			ArLog::log(ArLog::Verbose,"ArRobot::processParamFile resetting sonar %d %d %d %d", i, myParams->getSonarX(i),
 									myParams->getSonarY(i), myParams->getSonarTh(i));
       mySonars[i]->resetSensorPosition(myParams->getSonarX(i),
-				      myParams->getSonarY(i), 
+				      myParams->getSonarY(i),
 				      myParams->getSonarTh(i));
       mySonars[i]->setIgnoreThisReading(true);
     }
@@ -1551,13 +1551,13 @@ bool ArRobot::madeConnection(bool resetConnectionTime)
     processParamFile();
     return true;
   }
-  
+
   std::string subtypeParamFileName;
   std::string nameParamFileName;
   bool loadedSubTypeParam;
   bool loadedNameParam;
   bool hadDefault = true;
-  
+
   if (myParams != NULL)
     delete myParams;
 
@@ -1641,7 +1641,7 @@ bool ArRobot::madeConnection(bool resetConnectionTime)
   else if (ArUtil::strcasecmp(myRobotSubType, "researchPB") == 0)
     myParams = new ArRobotResearchPB;
   else if (ArUtil::strcasecmp(myRobotSubType, "seekurjr") == 0)
-    myParams = new ArRobotSeekurJr;  
+    myParams = new ArRobotSeekurJr;
   else if(ArUtil::strcasecmp(myRobotSubType, "p3dx-sh-lms1xx") == 0)
     myParams = new ArRobotP3DXSH_lms1xx;
   else if(ArUtil::strcasecmp(myRobotSubType, "p3at-sh-lms1xx") == 0)
@@ -1690,11 +1690,11 @@ bool ArRobot::madeConnection(bool resetConnectionTime)
 
   subtypeParamFileName += ".p";
   if ((loadedSubTypeParam = myParams->parseFile(subtypeParamFileName.c_str(), true, true)))
-      ArLog::log(ArLog::Normal, 
-		 "Loaded robot parameters from %s", 
+      ArLog::log(ArLog::Normal,
+		 "Loaded robot parameters from %s",
 		 subtypeParamFileName.c_str());
   /* If the above line was replaced with this one line
-     paramFile->load(); 
+     paramFile->load();
      then the sonartest (and lots of other stuff probably) would break
   */
   // then the one for the particular name, if we can
@@ -1706,18 +1706,18 @@ bool ArRobot::madeConnection(bool resetConnectionTime)
 					     true, true)))
   {
     if (loadedSubTypeParam)
-      ArLog::log(ArLog::Normal, 
- "Loaded robot parameters from %s on top of %s robot parameters", 
+      ArLog::log(ArLog::Normal,
+ "Loaded robot parameters from %s on top of %s robot parameters",
 		 nameParamFileName.c_str(), subtypeParamFileName.c_str());
     else
-      ArLog::log(ArLog::Normal, "Loaded robot parameters from %s", 
+      ArLog::log(ArLog::Normal, "Loaded robot parameters from %s",
 		 nameParamFileName.c_str());
   }
-   
+
   if (!loadedSubTypeParam && !loadedNameParam)
   {
     if (hadDefault)
-      ArLog::log(ArLog::Normal, "Using default parameters for a %s robot", 
+      ArLog::log(ArLog::Normal, "Using default parameters for a %s robot",
 		 myRobotSubType.c_str());
     else
     {
@@ -1757,8 +1757,8 @@ bool ArRobot::madeConnection(bool resetConnectionTime)
  * only available from robots with SH controllers running ARCOS (Pioneer 3,
  * PowerBot, PeopleBot, AmigoBot).  If a robot does not support encoder data,
  * this request will be ignored.
- * 
- * Encoder packets are sent after the main SIP (motor packet) by ARCOS. If you want to 
+ *
+ * Encoder packets are sent after the main SIP (motor packet) by ARCOS. If you want to
  * handle encoder packets immediately upon reception, add a general robot packet handler to
  * ArRobot with addPacketHandler(), and check the packet for the encoder packet ID
  * 0x90. See addPacketHandler() for details on how to write a general packet
@@ -1774,7 +1774,7 @@ AREXPORT void ArRobot::requestEncoderPackets()
   Note that not all robots have built-in GPIO, and so will not return any
   response to this request.  Refer to your robot's operations manual for
   information on whether and what kind of digital and analog IO interface
-  it has.  (Pioneer 3, PeopleBot and PowerBot 
+  it has.  (Pioneer 3, PeopleBot and PowerBot
   have digital IO built in to the robot.  On Pioneer LX, use ArMTXIO instead.
   If running on Linux on a Versalogic EBX-12 computer, ArVersalogicIO can be
   used to access the EBX-12 computer's IO interface.  Otherwise, a user-added
@@ -1818,8 +1818,8 @@ void ArRobot::startStabilization()
   myIsStabilizing = true;
   myStartedStabilizing.setToNow();
 
-  for (it = myStabilizingCBList.begin(); 
-      it != myStabilizingCBList.end(); 
+  for (it = myStabilizingCBList.begin();
+      it != myStabilizingCBList.end();
       it++)
     (*it)->invoke();
 
@@ -1848,14 +1848,14 @@ void ArRobot::finishedConnection()
 
 void ArRobot::failedConnect()
 {
-  std::list<ArFunctor *>::iterator it;  
+  std::list<ArFunctor *>::iterator it;
 
   myAsyncConnectFlag = false;
   myBlockingConnectRun = false;
   ArLog::log(ArLog::Terse, "Failed to connect to robot.");
   myIsConnected = false;
-  for (it = myFailedConnectCBList.begin(); 
-      it != myFailedConnectCBList.end(); 
+  for (it = myFailedConnectCBList.begin();
+      it != myFailedConnectCBList.end();
       it++)
     (*it)->invoke();
 
@@ -1864,22 +1864,22 @@ void ArRobot::failedConnect()
   wakeAllConnOrFailWaitingThreads();
 }
 
-/** 
-  Disconnects from a robot.  This also calls of the DisconnectNormally 
-  Callback Functors if the robot was actually connected to a robot when 
+/**
+  Disconnects from a robot.  This also calls of the DisconnectNormally
+  Callback Functors if the robot was actually connected to a robot when
   this member was called. Then it disables the robot motors, sends CLOSE
   command to robot, waits one seconds, and closes the communications connection.
   This disconnection normally happens automatically when the program exits
-  by calling Aria::exit(), or if communication to the robot fails during 
+  by calling Aria::exit(), or if communication to the robot fails during
   the run cycle, and this method does not need to be explicitly called.
-  @return true if not connected to a robot (so no disconnect can happen, but 
-  it didn't failed either), also true if the command could be sent to the 
+  @return true if not connected to a robot (so no disconnect can happen, but
+  it didn't failed either), also true if the command could be sent to the
   robot (ie connection hasn't failed)
  **/
 
 AREXPORT bool ArRobot::disconnect()
 {
-  std::list<ArFunctor *>::iterator it;  
+  std::list<ArFunctor *>::iterator it;
   bool ret;
   ArSerialConnection *serConn;
 
@@ -1889,8 +1889,8 @@ AREXPORT bool ArRobot::disconnect()
   ArLog::log(ArLog::Terse, "Disconnecting from robot.");
   if (myIsConnected)
   {
-    for (it = myDisconnectNormallyCBList.begin(); 
-        it != myDisconnectNormallyCBList.end(); 
+    for (it = myDisconnectNormallyCBList.begin();
+        it != myDisconnectNormallyCBList.end();
         it++)
       (*it)->invoke();
   }
@@ -1908,10 +1908,10 @@ AREXPORT bool ArRobot::disconnect()
       ret = myConn->close();
       if ((serConn = dynamic_cast<ArSerialConnection *>(myConn)) != NULL)
         serConn->setBaud(myAsyncConnectStartBaud);
-    } 
+    }
     else
       ret = false;
-  } 
+  }
   else if (myConn != NULL)
     myConn->close();
 
@@ -1921,7 +1921,7 @@ AREXPORT bool ArRobot::disconnect()
 void ArRobot::dropConnection(const char *technicalReason,
 				      const char *userReason)
 {
-  std::list<ArFunctor *>::iterator it;  
+  std::list<ArFunctor *>::iterator it;
 
   if (!myIsConnected)
     return;
@@ -1938,8 +1938,8 @@ void ArRobot::dropConnection(const char *technicalReason,
 
   ArLog::log(ArLog::Terse, myDropConnectionReason.c_str());
   myIsConnected = false;
-  for (it = myDisconnectOnErrorCBList.begin(); 
-      it != myDisconnectOnErrorCBList.end(); 
+  for (it = myDisconnectOnErrorCBList.begin();
+      it != myDisconnectOnErrorCBList.end();
       it++)
     (*it)->invoke();
 
@@ -1950,7 +1950,7 @@ void ArRobot::dropConnection(const char *technicalReason,
 
 void ArRobot::cancelConnection()
 {
-  //std::list<ArFunctor *>::iterator it;  
+  //std::list<ArFunctor *>::iterator it;
 
   ArLog::log(ArLog::Verbose, "Cancelled connection to the microcontroller because of command.");
   myIsConnected = false;
@@ -1960,9 +1960,9 @@ void ArRobot::cancelConnection()
 }
 
 /**
-  Stops the robot, by telling it to have a translational velocity and 
-  rotational velocity of 0.  Also note that if you are using actions, this 
-  will cause the actions to be ignored until the direct motion precedence 
+  Stops the robot, by telling it to have a translational velocity and
+  rotational velocity of 0.  Also note that if you are using actions, this
+  will cause the actions to be ignored until the direct motion precedence
   timeout has been exceeded or clearDirectMotion is called.
   @see setDirectMotionPrecedenceTime
   @see getDirectMotionPrecedenceTime
@@ -1984,9 +1984,9 @@ AREXPORT void ArRobot::stop()
 }
 
 /**
-  Sets the desired translational velocity of the robot. 
+  Sets the desired translational velocity of the robot.
   ArRobot caches this value, and sends it with a VEL command during the next
-cycle. 
+cycle.
   The value is rounded to the nearest whole number mm/sec before
   sent to the robot controller.
 
@@ -2001,7 +2001,7 @@ AREXPORT void ArRobot::setVel(double velocity)
 }
 
 /**
-  Sets the desired lateral (sideways on local Y axis) translational velocity of the robot. 
+  Sets the desired lateral (sideways on local Y axis) translational velocity of the robot.
   ArRobot caches this value, and sends it with a LATVEL command during the next cycle.
   (Only has effect on robots that are capable of translating laterally, i.e.
   Seekur. Other robots will ignore the command.)
@@ -2017,14 +2017,14 @@ AREXPORT void ArRobot::setLatVel(double latVelocity)
   myLatSetTime.setToNow();
 }
 
-/** 
+/**
   Sends command to set the robot's velocity differentially, with
   separate velocities for left and right sides of the robot. The
-  ArRobot caches these values, and sends them with 
+  ArRobot caches these values, and sends them with
   a VEL2 command during the next
   cycle.  Note that this cancels both translational velocity AND
   rotational velocity, and is canceled by any of the other direct
-  motion commands.  
+  motion commands.
   The values are rounded to the nearest whole number mm/sec before
   sent to the robot controller.
 
@@ -2042,7 +2042,7 @@ AREXPORT void ArRobot::setLatVel(double latVelocity)
 
   @deprecated
 
-  @param leftVelocity the desired velocity of the left wheel 
+  @param leftVelocity the desired velocity of the left wheel
   @param rightVelocity the desired velocity of the right wheel
  **/
 AREXPORT void ArRobot::setVel2(double leftVelocity, double rightVelocity)
@@ -2060,7 +2060,7 @@ AREXPORT void ArRobot::setVel2(double leftVelocity, double rightVelocity)
   ArRobot caches this value, and sends it during the next cycle (with a MOVE
   or VEL command, depending on the robot).
 
-  @param distance the distance for the robot to move (millimeters). Note, 
+  @param distance the distance for the robot to move (millimeters). Note,
   due to the implementation of the MOVE command on some robots, it is best to
   restrict the distance to the range (5000mm, 5000mm] if possible. Not all
   robots have this restriction, however.
@@ -2076,7 +2076,7 @@ AREXPORT void ArRobot::move(double distance)
 
 /**
   Determines if a move command is finished, to within a small
-  distance threshold, "delta".  If delta = 0 (default), the delta distance 
+  distance threshold, "delta".  If delta = 0 (default), the delta distance
   set with setMoveDoneDist() will be used.
 
   @param delta how close to the goal distance the robot must be, or 0 for previously set default
@@ -2148,7 +2148,7 @@ AREXPORT void ArRobot::setHeading(double heading)
 
 /**
   Sets the rotational velocity of the robot, it caches this value,
-  and during the next command cycle, the value is rounded to the 
+  and during the next command cycle, the value is rounded to the
   nearest whole integer degree, and sent to the robot as an RVEL command.
 
   @param velocity the desired rotational velocity of the robot (deg/sec)
@@ -2168,7 +2168,7 @@ AREXPORT void ArRobot::setRotVel(double velocity)
 
 /**
   Sets a delta heading to the robot, it caches this value, and sends
-  it during the next cycle.  
+  it during the next cycle.
 
   @param deltaHeading the desired amount to change the heading of the robot by
  **/
@@ -2195,7 +2195,7 @@ AREXPORT bool ArRobot::isStopped(double stoppedVel, double stoppedRotVel,
   if (stoppedLatVel < 0.001)
     stoppedLatVel = myStoppedLatVel;
 
-  if (fabs(myVel) <= stoppedVel && fabs(myRotVel) <= stoppedRotVel && 
+  if (fabs(myVel) <= stoppedVel && fabs(myRotVel) <= stoppedRotVel &&
       (!hasLatVel() || fabs(myLatVel) < stoppedLatVel))
     return true;
   else
@@ -2232,7 +2232,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransVel(double maxVel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxVel > myOrigRobotConfig->getTransVelTop())
   {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxTransVel: given a value (%g) over TransVelTop (%g) and will cap it", maxVel, myOrigRobotConfig->getTransVelTop());
@@ -2270,7 +2270,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransNegVel(double maxNegVel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxNegVel < -myOrigRobotConfig->getTransVelTop())
   {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxTransNegVel: given a value (%g) below TransVelTop (-%g) and will cap it", maxNegVel, myOrigRobotConfig->getTransVelTop());
@@ -2278,7 +2278,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransNegVel(double maxNegVel)
   }
 
   if (fabs(maxNegVel - myAbsoluteMaxTransNegVel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxTransNegVel: Setting to %g",
 	       maxNegVel);
 
@@ -2296,7 +2296,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransNegVel(double maxNegVel)
   manipulate this value you should use the actions or setTransAccel.
 
   @param maxAccel the maximum acceleration to be set, it must be a non-zero
-  number 
+  number
 
   @return true if the value is good, false othrewise
  **/
@@ -2309,7 +2309,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransAccel(double maxAccel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxAccel > myOrigRobotConfig->getTransAccelTop())
   {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxTransAccel: given a value (%g) over TransAccelTop (%g) and will cap it", maxAccel, myOrigRobotConfig->getTransAccelTop());
@@ -2317,7 +2317,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransAccel(double maxAccel)
   }
 
   if (fabs(maxAccel - myAbsoluteMaxTransAccel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxTransAccel: Setting to %g",
 	       maxAccel);
 
@@ -2335,7 +2335,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransAccel(double maxAccel)
   manipulate this value you should use the actions or setTransDecel.
 
   @param maxDecel the maximum deceleration to be set, it must be a non-zero
-  number 
+  number
 
   @return true if the value is good, false othrewise
  **/
@@ -2348,7 +2348,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransDecel(double maxDecel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxDecel > myOrigRobotConfig->getTransAccelTop())
   {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxTransDecel: given a value (%g) over TransAccelTop (%g) and will cap it", maxDecel, myOrigRobotConfig->getTransAccelTop());
@@ -2356,7 +2356,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxTransDecel(double maxDecel)
   }
 
   if (fabs(maxDecel - myAbsoluteMaxTransDecel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxTransDecel: Setting to %g",
 	       maxDecel);
 
@@ -2385,7 +2385,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotVel(double maxVel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxVel > myOrigRobotConfig->getRotVelTop())
   {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxRotVel: given a value (%g) over RotVelTop (%g) and will cap it", maxVel, myOrigRobotConfig->getRotVelTop());
@@ -2393,7 +2393,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotVel(double maxVel)
   }
 
   if (fabs(maxVel - myAbsoluteMaxRotVel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxRotVel: Setting to %g",
 	       maxVel);
 
@@ -2411,7 +2411,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotVel(double maxVel)
   manipulate this value you should use the actions or setRotAccel.
 
   @param maxAccel the maximum acceleration to be set, it must be a non-zero
-  number 
+  number
 
   @return true if the value is good, false othrewise
  **/
@@ -2424,7 +2424,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotAccel(double maxAccel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxAccel > myOrigRobotConfig->getRotAccelTop())
   {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxRotAccel: given a value (%g) over RotAccelTop (%g) and will cap it", maxAccel, myOrigRobotConfig->getRotAccelTop());
@@ -2432,7 +2432,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotAccel(double maxAccel)
   }
 
   if (fabs(maxAccel - myAbsoluteMaxRotAccel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxRotAccel: Setting to %g",
 	       maxAccel);
 
@@ -2450,7 +2450,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotAccel(double maxAccel)
   manipulate this value you should use the actions or setRotDecel.
 
   @param maxDecel the maximum deceleration to be set, it must be a non-zero
-  number 
+  number
 
   @return true if the value is good, false othrewise
  **/
@@ -2458,12 +2458,12 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotAccel(double maxAccel)
 AREXPORT bool ArRobot::setAbsoluteMaxRotDecel(double maxDecel)
 {
   if (maxDecel <= 0)
-  {    
+  {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxRotDecel: given a value <= 0 (%g) and will not use it", maxDecel);
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxDecel > myOrigRobotConfig->getRotAccelTop())
   {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxRotDecel: given a value (%g) over RotAccelTop (%g) and will cap it", maxDecel, myOrigRobotConfig->getRotAccelTop());
@@ -2471,7 +2471,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotDecel(double maxDecel)
   }
 
   if (fabs(maxDecel - myAbsoluteMaxRotDecel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxRotDecel: Setting to %g",
 	       maxDecel);
 
@@ -2490,7 +2490,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotDecel(double maxDecel)
   manipulate this value you should use the actions or setLatVelMax.
 
   @param maxLatVel the maximum velocity to be set, it must be a non-zero
-  number 
+  number
 
   @return true if the value is good, false othrewise
  **/
@@ -2498,21 +2498,21 @@ AREXPORT bool ArRobot::setAbsoluteMaxRotDecel(double maxDecel)
 AREXPORT bool ArRobot::setAbsoluteMaxLatVel(double maxLatVel)
 {
   if (maxLatVel <= 0)
-  {    
+  {
     ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxLatVel: given a value <= 0 (%g) and will not use it", maxLatVel);
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxLatVel > myOrigRobotConfig->getLatVelTop())
   {
-    ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxLatVel: given a value (%g) over LatVelTop (%g) and will cap it", 
+    ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxLatVel: given a value (%g) over LatVelTop (%g) and will cap it",
 	       maxLatVel, myOrigRobotConfig->getLatVelTop());
     maxLatVel = myOrigRobotConfig->getLatVelTop();
   }
 
   if (fabs(maxLatVel - myAbsoluteMaxLatVel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxLatVel: Setting to %g",
 	       maxLatVel);
 
@@ -2530,7 +2530,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxLatVel(double maxLatVel)
   manipulate this value you should use the actions or setLatAccel.
 
   @param maxAccel the maximum acceleration to be set, it must be a non-zero
-  number 
+  number
 
   @return true if the value is good, false othrewise
  **/
@@ -2543,16 +2543,16 @@ AREXPORT bool ArRobot::setAbsoluteMaxLatAccel(double maxAccel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxAccel > myOrigRobotConfig->getLatAccelTop())
   {
-    ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxLatAccel: given a value (%g) over LatAccelTop (%g) and will cap it", 
+    ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxLatAccel: given a value (%g) over LatAccelTop (%g) and will cap it",
 	       maxAccel, myOrigRobotConfig->getLatAccelTop());
     maxAccel = myOrigRobotConfig->getLatAccelTop();
   }
 
   if (fabs(maxAccel - myAbsoluteMaxLatAccel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxLatAccel: Setting to %g",
 	       maxAccel);
 
@@ -2570,7 +2570,7 @@ AREXPORT bool ArRobot::setAbsoluteMaxLatAccel(double maxAccel)
   manipulate this value you should use the actions or setLatDecel.
 
   @param maxDecel the maximum deceleration to be set, it must be a non-zero
-  number 
+  number
 
   @return true if the value is good, false othrewise
  **/
@@ -2583,16 +2583,16 @@ AREXPORT bool ArRobot::setAbsoluteMaxLatDecel(double maxDecel)
     return false;
   }
 
-  if (myOrigRobotConfig->hasPacketArrived() && 
+  if (myOrigRobotConfig->hasPacketArrived() &&
       maxDecel > myOrigRobotConfig->getLatAccelTop())
   {
-    ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxLatDecel: given a value (%g) over LatAccelTop (%g) and will cap it", 
+    ArLog::log(ArLog::Normal, "ArRobot::setAbsoluteMaxLatDecel: given a value (%g) over LatAccelTop (%g) and will cap it",
 	       maxDecel, myOrigRobotConfig->getLatAccelTop());
     maxDecel = myOrigRobotConfig->getLatAccelTop();
   }
 
   if (fabs(maxDecel - myAbsoluteMaxLatDecel) > ArMath::epsilon())
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::setAbsoluteMaxLatDecel: Setting to %g",
 	       maxDecel);
 
@@ -2652,7 +2652,7 @@ AREXPORT unsigned char  ArRobot::getIODigOut(int num) const
     return (unsigned char) 0;
 }
 
-/** 
+/**
   @return the ArRobotParams instance the robot is using for its parameters
  **/
 AREXPORT const ArRobotParams *ArRobot::getRobotParams() const
@@ -2660,7 +2660,7 @@ AREXPORT const ArRobotParams *ArRobot::getRobotParams() const
   return myParams;
 }
 
-/** 
+/**
   @return the ArRobotParams instance the robot is using for its parameters
  **/
 ArRobotParams *ArRobot::getRobotParamsInternal()
@@ -2668,7 +2668,7 @@ ArRobotParams *ArRobot::getRobotParamsInternal()
   return myParams;
 }
 
-/** 
+/**
     @return the ArRobotConfigPacketReader taken when this instance got
     connected to the robot
 **/
@@ -2676,24 +2676,24 @@ AREXPORT const ArRobotConfigPacketReader *ArRobot::getOrigRobotConfig() const
 {
   return myOrigRobotConfig;
 }
-  
+
 /**
    Adds a packet handler.  The packet handler function should return true to prevent any
    further packet handlers from being invoked with this packet, or  false to allow other
-   packet handlers to received the packet. 
+   packet handlers to received the packet.
 
-   A packet handler is an ArRetFunctor1<bool, ArRobotPacket*>, 
+   A packet handler is an ArRetFunctor1<bool, ArRobotPacket*>,
    (e.g.  created as an instance of ArRetFunctor1C.  The return is a boolean, while the functor
    takes an ArRobotPacket pointer as the argument.  This functor is placed in
    a list of functors to call when a packet arrives. This list is processed
-   in order until one of the handlers returns true. 
-   
+   in order until one of the handlers returns true.
+
    Your packet handler
    function may be invoked for any packet, so it should test the packet type
    ID (see ArRobotPacket::getID()). If your handler gets data from the packet
    (it "handles" it) it should return true, to prevent ArRobot from invoking
-   other handlers with the packet (with data removed). 
-   
+   other handlers with the packet (with data removed).
+
    If you hander
    cannot interpret the packet, it should leave it unmodified and return
    false to allow other handlers a chance to receive it.
@@ -2703,8 +2703,8 @@ AREXPORT const ArRobotConfigPacketReader *ArRobot::getOrigRobotConfig() const
    @see remPacketHandler
 **/
 AREXPORT void ArRobot::addPacketHandler(
-	ArRetFunctor1<bool, ArRobotPacket *> *functor, 
-	ArListPos::Pos position) 
+	ArRetFunctor1<bool, ArRobotPacket *> *functor,
+	ArListPos::Pos position)
 {
   if (position == ArListPos::FIRST)
     myPacketHandlerList.push_front(functor);
@@ -2728,14 +2728,14 @@ AREXPORT void ArRobot::remPacketHandler(
 /**
    Adds a connect callback, which is an ArFunctor, (created as an ArFunctorC).
    The entire list of connect callbacks is called when a connection is made
-   with the robot.  If you have some sort of module that adds a callback, 
+   with the robot.  If you have some sort of module that adds a callback,
    that module must remove the callback when the module is removed.
-   @param functor A functor (created from ArFunctorC) which refers to the 
+   @param functor A functor (created from ArFunctorC) which refers to the
    function to call.
    @param position whether to place the functor first or last
    @see remConnectCB
 **/
-AREXPORT void ArRobot::addConnectCB(ArFunctor *functor, 
+AREXPORT void ArRobot::addConnectCB(ArFunctor *functor,
 				    ArListPos::Pos position)
 {
   if (position == ArListPos::FIRST)
@@ -2743,11 +2743,11 @@ AREXPORT void ArRobot::addConnectCB(ArFunctor *functor,
   else if (position == ArListPos::LAST)
     myConnectCBList.push_back(functor);
   else
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
 	       "ArRobot::addConnectCallback: Invalid position.");
 }
 
-/** 
+/**
     @param functor the functor to remove from the list of connect callbacks
     @see addConnectCB
 **/
@@ -2757,20 +2757,20 @@ AREXPORT void ArRobot::remConnectCB(ArFunctor *functor)
 }
 
 
-/** Adds a failed connect callback,which is an ArFunctor, created as an 
+/** Adds a failed connect callback,which is an ArFunctor, created as an
     ArFunctorC.  This whole list of failed connect callbacks is called when
-    an attempt is made to connect to the robot, but fails.   The usual reason 
+    an attempt is made to connect to the robot, but fails.   The usual reason
     for this failure is either that there is no robot/sim where the connection
     was tried to be made, the robot wasn't given a connection, or the radio
     modems that communicate with the robot aren't on.  If you have some sort
     of module that adds a callback, that module must remove the callback
     when the module removed.
-    @param functor functor created from ArFunctorC which refers to the 
+    @param functor functor created from ArFunctorC which refers to the
     function to call.
     @param position whether to place the functor first or last
     @see remFailedConnectCB
 **/
-AREXPORT void ArRobot::addFailedConnectCB(ArFunctor *functor, 
+AREXPORT void ArRobot::addFailedConnectCB(ArFunctor *functor,
 					  ArListPos::Pos position)
 {
   if (position == ArListPos::FIRST)
@@ -2778,11 +2778,11 @@ AREXPORT void ArRobot::addFailedConnectCB(ArFunctor *functor,
   else if (position == ArListPos::LAST)
     myFailedConnectCBList.push_back(functor);
   else
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
 	       "ArRobot::addFailedCallback: Invalid position.");
 }
 
-/** 
+/**
     @param functor the functor to remove from the list of connect callbacks
     @see addFailedConnectCB
 **/
@@ -2791,18 +2791,18 @@ AREXPORT void ArRobot::remFailedConnectCB(ArFunctor *functor)
   myFailedConnectCBList.remove(functor);
 }
 
-/** Adds a disconnect normally callback,which is an ArFunctor, created as an 
-    ArFunctorC.  This whole list of disconnect normally callbacks is called 
-    when something calls disconnect if the instance isConnected.  If there is 
+/** Adds a disconnect normally callback,which is an ArFunctor, created as an
+    ArFunctorC.  This whole list of disconnect normally callbacks is called
+    when something calls disconnect if the instance isConnected.  If there is
     no connection and disconnect is called nothing is done.  If you have some
     sort of module that adds a callback, that module must remove the callback
     when the module is removed.
-    @param functor functor created from ArFunctorC which refers to the 
+    @param functor functor created from ArFunctorC which refers to the
     function to call.
     @param position whether to place the functor first or last
     @see remFailedConnectCB
 **/
-AREXPORT void ArRobot::addDisconnectNormallyCB(ArFunctor *functor, 
+AREXPORT void ArRobot::addDisconnectNormallyCB(ArFunctor *functor,
 					       ArListPos::Pos position)
 {
   if (position == ArListPos::FIRST)
@@ -2810,11 +2810,11 @@ AREXPORT void ArRobot::addDisconnectNormallyCB(ArFunctor *functor,
   else if (position == ArListPos::LAST)
     myDisconnectNormallyCBList.push_back(functor);
   else
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
 	       "ArRobot::addDisconnectNormallyCB: Invalid position.");
 }
 
-/** 
+/**
     @param functor the functor to remove from the list of connect callbacks
     @see addDisconnectNormallyCB
 **/
@@ -2823,23 +2823,23 @@ AREXPORT void ArRobot::remDisconnectNormallyCB(ArFunctor *functor)
   myDisconnectNormallyCBList.remove(functor);
 }
 
-/** Adds a disconnect on error callback, which is an ArFunctor, created as an 
-    ArFunctorC.  This whole list of disconnect on error callbacks is called 
+/** Adds a disconnect on error callback, which is an ArFunctor, created as an
+    ArFunctorC.  This whole list of disconnect on error callbacks is called
     when ARIA loses connection to a robot because of an error.  This can occur
-    if the physical connection (ie serial cable) between the robot and the 
-    computer is severed/disconnected, if one of a pair of radio modems that 
+    if the physical connection (ie serial cable) between the robot and the
+    computer is severed/disconnected, if one of a pair of radio modems that
     connect the robot and computer are disconnected, if someone presses the
     reset button on the robot, or if the simulator is closed while ARIA
-    is connected to it.  Note that if the link between the two is lost the 
+    is connected to it.  Note that if the link between the two is lost the
     ARIA assumes it is temporary until it reaches a timeout value set with
-    setConnectionTimeoutTime.  If you have some sort of module that adds a 
+    setConnectionTimeoutTime.  If you have some sort of module that adds a
     callback, that module must remove the callback when the module removed.
-    @param functor functor created from ArFunctorC which refers to the 
+    @param functor functor created from ArFunctorC which refers to the
     function to call.
     @param position whether to place the functor first or last
     @see remDisconnectOnErrorCB
 **/
-AREXPORT void ArRobot::addDisconnectOnErrorCB(ArFunctor *functor, 
+AREXPORT void ArRobot::addDisconnectOnErrorCB(ArFunctor *functor,
 					      ArListPos::Pos position)
 {
   if (position == ArListPos::FIRST)
@@ -2847,11 +2847,11 @@ AREXPORT void ArRobot::addDisconnectOnErrorCB(ArFunctor *functor,
   else if (position == ArListPos::LAST)
     myDisconnectOnErrorCBList.push_back(functor);
   else
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
 	       "ArRobot::addDisconnectOnErrorCB: Invalid position");
 }
 
-/** 
+/**
     @param functor the functor to remove from the list of connect callbacks
     @see addDisconnectOnErrorCB
 **/
@@ -2866,11 +2866,11 @@ AREXPORT void ArRobot::remDisconnectOnErrorCB(ArFunctor *functor)
    functors is called when the run loop exits. This is most usefull for
    threaded programs that run the robot using ArRobot::runAsync. This will
    allow user threads to know when the robot loop has exited.
-   @param functor functor created from ArFunctorC which refers to the 
+   @param functor functor created from ArFunctorC which refers to the
    function to call.
    @param position whether to place the functor first or last
    @see remRunExitCB
-**/   
+**/
 AREXPORT void ArRobot::addRunExitCB(ArFunctor *functor,
 				    ArListPos::Pos position)
 {
@@ -2882,7 +2882,7 @@ AREXPORT void ArRobot::addRunExitCB(ArFunctor *functor,
     ArLog::log(ArLog::Terse, "ArRobot::addRunExitCB: Invalid position");
 }
 
-/** 
+/**
     @param functor  The functor to remove from the list of run exit callbacks
     @see addRunExitCB
 **/
@@ -2896,14 +2896,14 @@ AREXPORT void ArRobot::remRunExitCB(ArFunctor *functor)
    ArFunctorC.  The entire list of connect callbacks is called just
    before the connection is called done to the robot.  This time can
    be used to calibtrate readings (on things like gyros).
-   
+
    @param functor The functor to call (e.g. ArFunctorC)
 
    @param position whether to place the functor first or last
 
    @see remConnectCB
 **/
-AREXPORT void ArRobot::addStabilizingCB(ArFunctor *functor, 
+AREXPORT void ArRobot::addStabilizingCB(ArFunctor *functor,
 				       ArListPos::Pos position)
 {
   if (position == ArListPos::FIRST)
@@ -2911,11 +2911,11 @@ AREXPORT void ArRobot::addStabilizingCB(ArFunctor *functor,
   else if (position == ArListPos::LAST)
     myStabilizingCBList.push_back(functor);
   else
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
 	       "ArRobot::addConnectCallback: Invalid position.");
 }
 
-/** 
+/**
     @param functor the functor to remove from the list of stabilizing callbacks
     @see addConnectCB
 **/
@@ -3081,7 +3081,7 @@ AREXPORT void ArRobot::wakeAllRunExitWaitingThreads()
 
 /**
    This gets the root of the synchronous task tree, so that someone can add
-   their own new types of tasks, or find out more information about 
+   their own new types of tasks, or find out more information about
    each task... only serious developers should use this.
    @return the root of the sycnhronous task tree
    @see ArSyncTask
@@ -3092,8 +3092,8 @@ AREXPORT ArSyncTask *ArRobot::getSyncTaskRoot()
 }
 
 /**
-   The synchronous tasks get called every robot cycle (every 100 ms by 
-   default).  
+   The synchronous tasks get called every robot cycle (every 100 ms by
+   default).
 
    @warning Not thread safe; if robot thread is running in background (from
     runAsync()), you must lock the ArRobot object before calling and unlock after
@@ -3106,7 +3106,7 @@ AREXPORT ArSyncTask *ArRobot::getSyncTaskRoot()
    used.  The tasks are called in order of highest number to lowest
    position number.
 
-   @param functor functor created from ArFunctorC which refers to the 
+   @param functor functor created from ArFunctorC which refers to the
    function to call.
 
    @param state Optional pointer to external ArSyncTask state variable; normally not needed
@@ -3114,8 +3114,8 @@ AREXPORT ArSyncTask *ArRobot::getSyncTaskRoot()
 
    @see remUserTask
 **/
-AREXPORT bool ArRobot::addUserTask(const char *name, int position, 
-				      ArFunctor *functor, 
+AREXPORT bool ArRobot::addUserTask(const char *name, int position,
+				      ArFunctor *functor,
 				      ArTaskState::State *state)
 {
   ArSyncTask *proc;
@@ -3125,9 +3125,9 @@ AREXPORT bool ArRobot::addUserTask(const char *name, int position,
   proc = mySyncTaskRoot->findNonRecursive("User Tasks");
   if (proc == NULL)
     return false;
-  
+
   proc->addNewLeaf(name, position, functor, state);
-  return true;	
+  return true;
 }
 
 /**
@@ -3145,12 +3145,12 @@ AREXPORT void ArRobot::remUserTask(const char *name)
   proc = mySyncTaskRoot->findNonRecursive("User Tasks");
   if (proc == NULL)
     return;
-  
+
   userProc = proc->findNonRecursive(name);
   if (userProc == NULL)
     return;
 
-  
+
   delete userProc;
 
 }
@@ -3170,34 +3170,34 @@ AREXPORT void ArRobot::remUserTask(ArFunctor *functor)
   proc = mySyncTaskRoot->findNonRecursive("User Tasks");
   if (proc == NULL)
     return;
-  
-  
+
+
   userProc = proc->findNonRecursive(functor);
   if (userProc == NULL)
     return;
 
-  
+
   delete userProc;
 
 }
 
 /**
-   The synchronous tasks get called every robot cycle (every 100 ms by 
-   default).  
+   The synchronous tasks get called every robot cycle (every 100 ms by
+   default).
    @warning Not thread safe; if robot thread is running in background (from
     runAsync()), you must lock the ArRobot object before calling and unlock after
     calling this method.
    @param name the name to give to the task, should be unique
-   @param position the place in the list of user tasks to place this 
+   @param position the place in the list of user tasks to place this
    task, this can be any integer, though by convention 0 to 100 is used.
    The tasks are called in order of highest number to lowest number.
-   @param functor functor created from ArFunctorC which refers to the 
+   @param functor functor created from ArFunctorC which refers to the
    function to call.
    @param state Optional pointer to external ArSyncTask state variable; normally not needed
    and may be NULL or omitted.
    @see remSensorInterpTask
 **/
-AREXPORT bool ArRobot::addSensorInterpTask(const char *name, int position, 
+AREXPORT bool ArRobot::addSensorInterpTask(const char *name, int position,
 					      ArFunctor *functor,
 					      ArTaskState::State *state)
 {
@@ -3208,9 +3208,9 @@ AREXPORT bool ArRobot::addSensorInterpTask(const char *name, int position,
   proc = mySyncTaskRoot->findNonRecursive("Sensor Interp");
   if (proc == NULL)
     return false;
-  
+
   proc->addNewLeaf(name, position, functor, state);
-  return true;	
+  return true;
 }
 
 /**
@@ -3228,12 +3228,12 @@ AREXPORT void ArRobot::remSensorInterpTask(const char *name)
   proc = mySyncTaskRoot->findNonRecursive("Sensor Interp");
   if (proc == NULL)
     return;
-  
+
   sensorInterpProc = proc->findNonRecursive(name);
   if (sensorInterpProc == NULL)
     return;
 
-  
+
   delete sensorInterpProc;
 
 }
@@ -3253,18 +3253,18 @@ AREXPORT void ArRobot::remSensorInterpTask(ArFunctor *functor)
   proc = mySyncTaskRoot->findNonRecursive("Sensor Interp");
   if (proc == NULL)
     return;
-  
-  
+
+
   sensorInterpProc = proc->findNonRecursive(functor);
   if (sensorInterpProc == NULL)
     return;
 
-  
+
   delete sensorInterpProc;
 
 }
 
-/** 
+/**
     @see ArLog
 **/
 AREXPORT void ArRobot::logUserTasks() const
@@ -3291,7 +3291,7 @@ AREXPORT void ArRobot::logAllTasks() const
 
 /**
    Finds a user task by its name, searching the entire space of tasks
-   @return NULL if no user task of that name found, otherwise a pointer to 
+   @return NULL if no user task of that name found, otherwise a pointer to
    the ArSyncTask for the first task found with that name
 **/
 AREXPORT ArSyncTask *ArRobot::findUserTask(const char *name)
@@ -3353,21 +3353,21 @@ AREXPORT ArSyncTask *ArRobot::findTask(ArFunctor *functor)
 
 }
 
-/** 
+/**
     Adds an action to the list of actions with the given priority. In
     the case of two (or more) actions with the same priority, the
     default resolver (ArPriorityResolver) averages the the multiple
     readings. The priority can be any integer, but as a convention 0
     to 100 is used, with 100 being the highest priority. The default
     resolver (ArPriorityResolver) resolves the actions in order of descending
-    priority. For example, an action with priority 100 is evaluated before 
-    one with priority 99, followed by 50, etc.  This means that an action with 
+    priority. For example, an action with priority 100 is evaluated before
+    one with priority 99, followed by 50, etc.  This means that an action with
     a higher priority may be able to supercede a lower-priority action's
-    desired value for a certain output to a lesser or greater degree, depending 
-    on how high a "strength" value it sets.  See the overview of ARIA in this 
+    desired value for a certain output to a lesser or greater degree, depending
+    on how high a "strength" value it sets.  See the overview of ARIA in this
     reference manual for more discussion on Actions.
 
-    @param action the action to add 
+    @param action the action to add
     @param priority what importance to give the action; how to order the actions.  High priority actions are evaluated by the action resolvel before lower priority actions.
     @return true if the action was successfully added, false on error (e.g. the action was NULL)
     @sa remAction(ArAction*)
@@ -3378,18 +3378,18 @@ AREXPORT bool ArRobot::addAction(ArAction *action, int priority)
 {
   if (action == NULL)
   {
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
       "ArRobot::addAction: an attempt was made to add a NULL action pointer");
     return false;
   }
-  
+
   action->setRobot(this);
   myActions.insert(std::pair<int, ArAction *>(priority, action));
   return true;
 }
 
 /**
-   Finds the action with the given name and removes it from the actions... 
+   Finds the action with the given name and removes it from the actions...
    if more than one action has that name it find the one with the lowest
    priority
    @param actionName the name of the action we want to find
@@ -3419,7 +3419,7 @@ AREXPORT bool ArRobot::remAction(const char *actionName)
 }
 
 /**
-   Finds the action with the given pointer and removes it from the actions... 
+   Finds the action with the given pointer and removes it from the actions...
    if more than one action has that pointer it find the one with the lowest
    priority
    @param action the action we want to remove
@@ -3462,7 +3462,7 @@ AREXPORT ArAction *ArRobot::findAction(const char *actionName)
 {
   ArResolver::ActionMap::reverse_iterator it;
   ArAction *act;
-  
+
   for (it = myActions.rbegin(); it != myActions.rend(); ++it)
   {
     act = (*it).second;
@@ -3491,17 +3491,17 @@ AREXPORT void ArRobot::deactivateActions()
 {
   ArResolver::ActionMap *am;
   ArResolver::ActionMap::iterator amit;
-  
+
   am = getActionMap();
   if (am == NULL)
   {
-    ArLog::log(ArLog::Terse, 
+    ArLog::log(ArLog::Terse,
             "ArRobot::deactivateActions: NULL action map... failed.");
     return;
   }
   for (amit = am->begin(); amit != am->end(); amit++)
     (*amit).second->deactivate();
-  
+
 
 }
 
@@ -3514,7 +3514,7 @@ AREXPORT void ArRobot::logActions(bool logDeactivated) const
   const ArAction *action;
 
   if (logDeactivated)
-    ArLog::log(ArLog::Terse, "The action list (%d total):", 
+    ArLog::log(ArLog::Terse, "The action list (%d total):",
 	       myActions.size());
   else
     ArLog::log(ArLog::Terse, "The active action list:");
@@ -3597,32 +3597,32 @@ void ArRobot::stateReflector()
 
   // if this is true actions can't go
   if ((myTransType != TRANS_NONE && myDirectPrecedenceTime == 0) ||
-      (myTransType != TRANS_NONE && myDirectPrecedenceTime != 0 && 
+      (myTransType != TRANS_NONE && myDirectPrecedenceTime != 0 &&
        myTransSetTime.mSecSince() < myDirectPrecedenceTime))
   {
     myActionTransSet = false;
     transVal = ArMath::roundShort(myTransVal);
     transVal2 = 0;
 
-    if (hasSettableVelMaxes() && 
+    if (hasSettableVelMaxes() &&
 	ArMath::fabs(myLastSentTransVelMax - myTransVelMax) >= 1)
     {
       comInt(ArCommands::SETV,
 	     ArMath::roundShort(myTransVelMax));
       myLastSentTransVelMax = myTransVelMax;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "Non-action trans max vel of %d", 
+	ArLog::log(ArLog::Normal, "Non-action trans max vel of %d",
 		   ArMath::roundShort(myTransVelMax));
     }
 
-    if (hasSettableAccsDecs() && ArMath::fabs(myTransAccel) > 1 && 
+    if (hasSettableAccsDecs() && ArMath::fabs(myTransAccel) > 1 &&
 	ArMath::fabs(myLastSentTransAccel - myTransAccel) >= 1)
     {
       comInt(ArCommands::SETA,
 	     ArMath::roundShort(myTransAccel));
       myLastSentTransAccel = myTransAccel;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "Non-action trans accel of %d", 
+	ArLog::log(ArLog::Normal, "Non-action trans accel of %d",
 		   ArMath::roundShort(myTransAccel));
     }
 
@@ -3633,7 +3633,7 @@ void ArRobot::stateReflector()
 	     -ArMath::roundShort(myTransDecel));
       myLastSentTransDecel = myTransDecel;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "Non-action trans decel of %d", 
+	ArLog::log(ArLog::Normal, "Non-action trans decel of %d",
 		   -ArMath::roundShort(myTransDecel));
     }
 
@@ -3651,7 +3651,7 @@ void ArRobot::stateReflector()
 	comInt(ArCommands::VEL, ArMath::roundShort(transVal));
 	myLastTransSent.setToNow();
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Non-action trans vel of %d", 
+	  ArLog::log(ArLog::Normal, "Non-action trans vel of %d",
 		     ArMath::roundShort(transVal));
 	//printf("Sent command vel!\n");
       }
@@ -3664,22 +3664,22 @@ void ArRobot::stateReflector()
 	transVal = 128;
       else if (ArMath::roundShort(myTransVal/myParams->getVel2Divisor()) < -128)
 	transVal = -128;
-      else 
+      else
 	transVal = ArMath::roundShort(myTransVal/myParams->getVel2Divisor());
       if (ArMath::roundShort(myTransVal2/myParams->getVel2Divisor()) > 128)
 	transVal2 = 128;
       else if (ArMath::roundShort(myTransVal2/myParams->getVel2Divisor()) < -128)
 	transVal2 = -128;
-      else 
+      else
 	transVal2 = ArMath::roundShort(myTransVal2/myParams->getVel2Divisor());
-      if (myLastTransVal != transVal || myLastTransVal2 != transVal2 || 
+      if (myLastTransVal != transVal || myLastTransVal2 != transVal2 ||
 	  myLastTransType != myTransType ||
 	  (myLastTransSent.mSecSince() >= myStateReflectionRefreshTime))
       {
 	com2Bytes(ArCommands::VEL2, (char)transVal, (char)transVal2);
 	myLastTransSent.setToNow();
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Non-action vel2 of %d %d", 
+	  ArLog::log(ArLog::Normal, "Non-action vel2 of %d %d",
 		     transVal, transVal2);
 	//printf("Sent command vel2!\n");
       }
@@ -3698,7 +3698,7 @@ void ArRobot::stateReflector()
 	myTransType = TRANS_DIST;
 	distGone = myTransDistStart.findDistanceTo(getPose());
 	distToGo = fabs(fabs(myTransVal) - distGone);
-	if (distGone > fabs(myTransVal) || 
+	if (distGone > fabs(myTransVal) ||
 	    (distToGo < 10 && fabs(getVel()) < 30))
 	{
 	  comInt(ArCommands::VEL, 0);
@@ -3714,20 +3714,20 @@ void ArRobot::stateReflector()
 	  vel *= -1;
 	comInt(ArCommands::VEL, ArMath::roundShort(vel));
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Non-action move-helper of %d", 
+	  ArLog::log(ArLog::Normal, "Non-action move-helper of %d",
 		     ArMath::roundShort(vel));
       }
-      else if (myParams->hasMoveCommand() && myTransType == TRANS_DIST_NEW) 
+      else if (myParams->hasMoveCommand() && myTransType == TRANS_DIST_NEW)
       {
 	comInt(ArCommands::MOVE, transVal);
 	myLastTransSent.setToNow();
 	myTransType = TRANS_DIST;
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Non-action move of %d", 
+	  ArLog::log(ArLog::Normal, "Non-action move of %d",
 		     transVal);
 	myTryingToMove = true;
       }
-      else if (myTransType == TRANS_DIST && 
+      else if (myTransType == TRANS_DIST &&
 	  (myLastTransSent.mSecSince() >= myStateReflectionRefreshTime))
       {
 	com(0);
@@ -3744,7 +3744,7 @@ void ArRobot::stateReflector()
       //printf("No trans command sent\n");
     }
     else
-      ArLog::log(ArLog::Terse, 
+      ArLog::log(ArLog::Terse,
 		 "ArRobot::stateReflector: Invalid translational type %d.",
 		 myTransType);
     myLastTransVal = transVal;
@@ -3753,19 +3753,19 @@ void ArRobot::stateReflector()
   }
   else // if actions can go
   {
-    if (hasSettableVelMaxes() && 
+    if (hasSettableVelMaxes() &&
 	ArMath::fabs(myLastSentTransVelMax - myTransVelMax) >= 1)
     {
       comInt(ArCommands::SETV,
 	     ArMath::roundShort(myTransVelMax));
       myLastSentTransVelMax = myTransVelMax;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "Action-but-robot trans max vel of %d", 
+	ArLog::log(ArLog::Normal, "Action-but-robot trans max vel of %d",
 		   ArMath::roundShort(myTransVelMax));
     }
-    
+
     // first we'll handle all of the accel decel things
-    if (myActionDesired.getTransAccelStrength() >= 
+    if (myActionDesired.getTransAccelStrength() >=
 	ArActionDesired::MIN_STRENGTH)
     {
       transAccel = ArMath::roundShort(myActionDesired.getTransAccel());
@@ -3776,18 +3776,18 @@ void ArRobot::stateReflector()
 	       ArMath::roundShort(transAccel));
 	myLastSentTransAccel = transAccel;
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Action trans accel of %d", 
+	  ArLog::log(ArLog::Normal, "Action trans accel of %d",
 		     ArMath::roundShort(transAccel));
       }
     }
-    else if (hasSettableAccsDecs() && ArMath::fabs(myTransAccel) > 1 && 
+    else if (hasSettableAccsDecs() && ArMath::fabs(myTransAccel) > 1 &&
 	ArMath::fabs(myLastSentTransAccel - myTransAccel) >= 1)
     {
       comInt(ArCommands::SETA,
 	     ArMath::roundShort(myTransAccel));
       myLastSentTransAccel = myTransAccel;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "Action-but-robot trans accel of %d", 
+	ArLog::log(ArLog::Normal, "Action-but-robot trans accel of %d",
 		   ArMath::roundShort(myTransAccel));
     }
 
@@ -3802,7 +3802,7 @@ void ArRobot::stateReflector()
 	       -ArMath::roundShort(transDecel));
 	myLastSentTransDecel = transDecel;
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Action trans decel of %d", 
+	  ArLog::log(ArLog::Normal, "Action trans decel of %d",
 		     -ArMath::roundShort(transDecel));
       }
     }
@@ -3813,7 +3813,7 @@ void ArRobot::stateReflector()
 	     -ArMath::roundShort(myTransDecel));
       myLastSentTransDecel = myTransDecel;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "Action-but-robot trans decel of %d", 
+	ArLog::log(ArLog::Normal, "Action-but-robot trans decel of %d",
 		   -ArMath::roundShort(myTransDecel));
     }
 
@@ -3826,7 +3826,7 @@ void ArRobot::stateReflector()
     else
       maxTransVel = myTransVelMax;
 
-    if (myActionDesired.getMaxNegVelStrength() >= 
+    if (myActionDesired.getMaxNegVelStrength() >=
 	ArActionDesired::MIN_STRENGTH)
     {
       maxNegTransVel = -ArMath::fabs(myActionDesired.getMaxNegVel());
@@ -3835,7 +3835,7 @@ void ArRobot::stateReflector()
     }
     else
       maxNegTransVel = myTransNegVelMax;
-    
+
     if (myActionDesired.getVelStrength() >= ArActionDesired::MIN_STRENGTH)
     {
       transVal = ArMath::roundShort(myActionDesired.getVel());
@@ -3846,7 +3846,7 @@ void ArRobot::stateReflector()
       // MPL commenting out these lines so that if nothing is set
       // it'll just stop
 
-      //transVal = myLastActionTransVal; 
+      //transVal = myLastActionTransVal;
       transVal = 0;
     }
 
@@ -3860,25 +3860,25 @@ void ArRobot::stateReflector()
     if (transVal < maxNegVel)
       transVal = maxNegVel;
 
-    if (myActionTransSet && 
+    if (myActionTransSet &&
 	(myLastTransSent.mSecSince() >= myStateReflectionRefreshTime ||
-	 transVal != myLastActionTransVal))			     
+	 transVal != myLastActionTransVal))
     {
       comInt(ArCommands::VEL, ArMath::roundShort(transVal));
       myLastTransSent.setToNow();
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "Action trans vel of %d", 
-		   ArMath::roundShort(transVal));      
+	ArLog::log(ArLog::Normal, "Action trans vel of %d",
+		   ArMath::roundShort(transVal));
     }
     myLastActionTransVal = transVal;
   }
 
   // if this is true actions can't go
   if ((myRotType != ROT_NONE && myDirectPrecedenceTime == 0) ||
-      (myRotType != ROT_NONE && myDirectPrecedenceTime != 0 && 
+      (myRotType != ROT_NONE && myDirectPrecedenceTime != 0 &&
        myRotSetTime.mSecSince() < myDirectPrecedenceTime))
   {
-    if (hasSettableVelMaxes() && 
+    if (hasSettableVelMaxes() &&
 	ArMath::fabs(myLastSentRotVelMax - myRotVelMax) >= 1)
     {
       //comInt(ArCommands::SETRVDIR, 0);
@@ -3890,7 +3890,7 @@ void ArRobot::stateReflector()
       myLastSentRotVelNegMax = -1;
       if (myLogMovementSent)
 	ArLog::log(ArLog::Normal, "%25sNon-action rot vel max of %d", "",
-		   ArMath::roundShort(myRotVelMax));      
+		   ArMath::roundShort(myRotVelMax));
 
     }
     if (hasSettableAccsDecs() && ArMath::fabs(myRotAccel) > 1 &&
@@ -3901,7 +3901,7 @@ void ArRobot::stateReflector()
       myLastSentRotAccel = myRotAccel;
       if (myLogMovementSent)
 	ArLog::log(ArLog::Normal, "%25sNon-action rot accel of %d", "",
-		   ArMath::roundShort(myRotAccel));      
+		   ArMath::roundShort(myRotAccel));
     }
     if (hasSettableAccsDecs() && ArMath::fabs(myRotDecel) > 1 &&
 	ArMath::fabs(myLastSentRotDecel - myRotDecel) >= 1)
@@ -3911,7 +3911,7 @@ void ArRobot::stateReflector()
       myLastSentRotDecel = myRotDecel;
       if (myLogMovementSent)
 	ArLog::log(ArLog::Normal, "%25sNon-action rot decel of %d", "",
-		   -ArMath::roundShort(myRotDecel));      
+		   -ArMath::roundShort(myRotDecel));
     }
 
     myActionRotSet = false;
@@ -3919,7 +3919,7 @@ void ArRobot::stateReflector()
     if (myRotType == ROT_HEADING)
     {
       encTh = ArMath::subAngle(myRotVal, myEncoderTransform.getTh());
-      rawTh = ArMath::addAngle(encTh, 
+      rawTh = ArMath::addAngle(encTh,
 			       ArMath::subAngle(myRawEncoderPose.getTh(),
 						myEncoderPose.getTh()));
       rotVal = ArMath::roundShort(rawTh);
@@ -3935,7 +3935,7 @@ void ArRobot::stateReflector()
 	myLastRotSent.setToNow();
 	//printf("sent command, heading\n");
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, 
+	  ArLog::log(ArLog::Normal,
 	     "%25sNon-action rot heading of %d (encoder %d, raw %d)",
 		     "",
 		     ArMath::roundShort(myRotVal),
@@ -3954,7 +3954,7 @@ void ArRobot::stateReflector()
 	myLastRotSent.setToNow();
 	if (myLogMovementSent)
 	  ArLog::log(ArLog::Normal, "%25sNon-action rot vel of %d", "",
-		     rotVal);      
+		     rotVal);
 	//printf("sent command, rot vel\n");
 	if (fabs((double)rotVal) > (double).5)
 	  myTryingToMove = true;
@@ -3965,7 +3965,7 @@ void ArRobot::stateReflector()
       //printf("Not sending any command, rot is set to ignore");
     }
     else
-      ArLog::log(ArLog::Terse, 
+      ArLog::log(ArLog::Terse,
 		 "ArRobot::stateReflector: Invalid rotation type %d.",
 		 myRotType);
     myLastRotVal = rotVal;
@@ -3979,7 +3979,7 @@ void ArRobot::stateReflector()
 	ArActionDesired::MIN_STRENGTH &&
 	myActionDesired.getMaxRotVelPosStrength() <
 	ArActionDesired::MIN_STRENGTH &&
-	myActionDesired.getMaxRotVelNegStrength() < 
+	myActionDesired.getMaxRotVelNegStrength() <
 	ArActionDesired::MIN_STRENGTH)
     {
       maxRotVel = myActionDesired.getMaxRotVel();
@@ -3992,7 +3992,7 @@ void ArRobot::stateReflector()
 	myLastSentRotVelPosMax = -1;
 	myLastSentRotVelNegMax = -1;
 	//comInt(ArCommands::SETRVDIR, 0);
-	comInt(ArCommands::SETRV, 
+	comInt(ArCommands::SETRV,
 	       ArMath::roundShort(maxRotVel));
 	if (myLogMovementSent)
 	  ArLog::log(ArLog::Normal, "%25sAction rot vel max of %d", "",
@@ -4000,7 +4000,7 @@ void ArRobot::stateReflector()
       }
     }
     // if a max pos or neg rot vel is set then use that
-    else if (myActionDesired.getMaxRotVelPosStrength() >= 
+    else if (myActionDesired.getMaxRotVelPosStrength() >=
 	  ArActionDesired::MIN_STRENGTH ||
 	  myActionDesired.getMaxRotVelNegStrength() >=
 	  ArActionDesired::MIN_STRENGTH)
@@ -4010,11 +4010,11 @@ void ArRobot::stateReflector()
 	maxRotVel = myActionDesired.getMaxRotVel();
       else
 	maxRotVel = myRotVelMax;
-      
+
       if (maxRotVel > myAbsoluteMaxRotVel)
 	maxRotVel = myAbsoluteMaxRotVel;
 
-      if (myActionDesired.getMaxRotVelPosStrength() >= 
+      if (myActionDesired.getMaxRotVelPosStrength() >=
 	  ArActionDesired::MIN_STRENGTH)
 	maxRotVelPos = ArUtil::findMin(maxRotVel,
 				       myActionDesired.getMaxRotVelPos());
@@ -4026,7 +4026,7 @@ void ArRobot::stateReflector()
       if (maxRotVelPos < .5)
 	maxRotVelPos = 1;
 
-      if (myActionDesired.getMaxRotVelNegStrength() >= 
+      if (myActionDesired.getMaxRotVelNegStrength() >=
 	  ArActionDesired::MIN_STRENGTH)
 	maxRotVelNeg = ArUtil::findMin(maxRotVel,
 				       myActionDesired.getMaxRotVelNeg());
@@ -4044,11 +4044,11 @@ void ArRobot::stateReflector()
 	myLastSentRotVelMax = -1;
 	myLastSentRotVelPosMax = maxRotVelPos;
 	myLastSentRotVelNegMax = maxRotVelNeg;
-	
+
 	// this command doesn't exist just yet...
-	comInt(ArCommands::SETRVDIR, 
+	comInt(ArCommands::SETRVDIR,
 	       ArMath::roundShort(maxRotVelPos));
-	comInt(ArCommands::SETRVDIR, 
+	comInt(ArCommands::SETRVDIR,
 	       ArMath::roundShort(-maxRotVelNeg));
 	if (myLogMovementSent)
 	{
@@ -4059,7 +4059,7 @@ void ArRobot::stateReflector()
 	}
       }
     }
-    else if (hasSettableVelMaxes() && 
+    else if (hasSettableVelMaxes() &&
 	     ArMath::fabs(myLastSentRotVelMax - myRotVelMax) >= 1)
     {
       //comInt(ArCommands::SETRVDIR, 0);
@@ -4067,9 +4067,9 @@ void ArRobot::stateReflector()
 	     ArMath::roundShort(myRotVelMax));
       myLastSentRotVelMax = myRotVelMax;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, 
-		   "%25sAction-but-robot rot vel max of %d", 
-		   "",  ArMath::roundShort(myRotVelMax));      
+	ArLog::log(ArLog::Normal,
+		   "%25sAction-but-robot rot vel max of %d",
+		   "",  ArMath::roundShort(myRotVelMax));
     }
 
     if (myActionDesired.getRotAccelStrength() >= ArActionDesired::MIN_STRENGTH)
@@ -4092,8 +4092,8 @@ void ArRobot::stateReflector()
 	     ArMath::roundShort(myRotAccel));
       myLastSentRotAccel = myRotAccel;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "%25sAction-but-robot rot accel of %d", 
-		   "", ArMath::roundShort(myRotAccel));      
+	ArLog::log(ArLog::Normal, "%25sAction-but-robot rot accel of %d",
+		   "", ArMath::roundShort(myRotAccel));
     }
 
     if (myActionDesired.getRotDecelStrength() >= ArActionDesired::MIN_STRENGTH)
@@ -4116,8 +4116,8 @@ void ArRobot::stateReflector()
 	     -ArMath::roundShort(myRotDecel));
       myLastSentRotDecel = myRotDecel;
       if (myLogMovementSent)
-	ArLog::log(ArLog::Normal, "%25sAction-but-robot rot decel of %d", 
-		   "", -ArMath::roundShort(myRotDecel));      
+	ArLog::log(ArLog::Normal, "%25sAction-but-robot rot decel of %d",
+		   "", -ArMath::roundShort(myRotDecel));
     }
 
 
@@ -4136,11 +4136,11 @@ void ArRobot::stateReflector()
 	//printf("delta %.0f\n", myActionDesired.getDeltaHeading());
 	//encTh = ArMath::subAngle(myRotVal, myEncoderTransform.getTh());
 	encTh = ArMath::subAngle(
-		ArMath::addAngle(myActionDesired.getDeltaHeading(), 
+		ArMath::addAngle(myActionDesired.getDeltaHeading(),
 				 getTh()),
 		myEncoderTransform.getTh());
 	//printf("final th %.0f\n", th);
-	rawTh = ArMath::addAngle(encTh, 
+	rawTh = ArMath::addAngle(encTh,
 				 ArMath::subAngle(myRawEncoderPose.getTh(),
 						  myEncoderPose.getTh()));
 	rotVal = ArMath::roundShort(rawTh);
@@ -4149,7 +4149,7 @@ void ArRobot::stateReflector()
 	myTryingToMove = true;
       }
       myActionRotSet = true;
-    } 
+    }
     else if (myActionDesired.getRotVelStrength() >=
 	                                     ArActionDesired::MIN_STRENGTH)
     {
@@ -4210,24 +4210,24 @@ void ArRobot::stateReflector()
     {
       /// MPL commenting out these lines, and making it so that if
       /// nothing is set it'll just stop
-      
+
       //rotStopped = myLastActionRotStopped;
       //rotVal = myLastActionRotVal;
       //rotHeading = myLastActionRotHeading;
       rotStopped = true;
     }
 
-    if (myActionRotSet && 
+    if (myActionRotSet &&
 	(myLastRotSent.mSecSince() > myStateReflectionRefreshTime ||
-	 rotStopped != myLastActionRotStopped || 
-	 rotVal != myLastActionRotVal || 
+	 rotStopped != myLastActionRotStopped ||
+	 rotVal != myLastActionRotVal ||
 	 rotHeading != myLastActionRotHeading))
     {
       if (rotStopped)
       {
 	comInt(ArCommands::RVEL, 0);
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, 
+	  ArLog::log(ArLog::Normal,
 		     "%25sAction rot vel of 0 (rotStopped)",
 		     "");
       }
@@ -4235,11 +4235,11 @@ void ArRobot::stateReflector()
       {
 	comInt(ArCommands::HEAD, rotVal);
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, 
+	  ArLog::log(ArLog::Normal,
 		     "%25sAction rot heading of %d (encoder %d, raw %d)",
 		     "",
 		     ArMath::roundShort(ArMath::addAngle(
-			     myActionDesired.getDeltaHeading(), 
+			     myActionDesired.getDeltaHeading(),
 			     getTh())),
 		     ArMath::roundShort(encTh),
 		     ArMath::roundShort(rotVal));
@@ -4248,17 +4248,17 @@ void ArRobot::stateReflector()
       {
 	comInt(ArCommands::RVEL, rotVal);
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "%25sAction rot vel of %d", "", 
+	  ArLog::log(ArLog::Normal, "%25sAction rot vel of %d", "",
 		     rotVal);
       }
       myLastRotSent.setToNow();
-    }		    
-    
+    }
+
     myLastActionRotVal = rotVal;
     myLastActionRotStopped = rotStopped;
     myLastActionRotHeading = rotHeading;
   }
-  
+
   // start lat
 
   // if we don't have lat vel then don't do any of this
@@ -4267,7 +4267,7 @@ void ArRobot::stateReflector()
   }
   // if this is true actions can't go
   else if ((myLatType != LAT_NONE && myDirectPrecedenceTime == 0) ||
-	   (myLatType != LAT_NONE && myDirectPrecedenceTime != 0 && 
+	   (myLatType != LAT_NONE && myDirectPrecedenceTime != 0 &&
 	    myLatSetTime.mSecSince() < myDirectPrecedenceTime))
   {
     myActionLatSet = false;
@@ -4283,7 +4283,7 @@ void ArRobot::stateReflector()
 		   ArMath::roundShort(myLatVelMax));
     }
 
-    if (ArMath::fabs(myLatAccel) > 1 && 
+    if (ArMath::fabs(myLatAccel) > 1 &&
 	ArMath::fabs(myLastSentLatAccel - myLatAccel) >= 1)
     {
       comInt(ArCommands::LATACCEL,
@@ -4294,7 +4294,7 @@ void ArRobot::stateReflector()
 		   ArMath::roundShort(myLatAccel));
     }
 
-    if (ArMath::fabs(myLatDecel) > 1 && 
+    if (ArMath::fabs(myLatDecel) > 1 &&
 	ArMath::fabs(myLastSentLatDecel - myLatDecel) >= 1)
     {
       comInt(ArCommands::LATACCEL,
@@ -4338,7 +4338,7 @@ void ArRobot::stateReflector()
 	myLatType = LAT_DIST;
 	distGone = myLatDistStart.findDistanceTo(getPose());
 	distToGo = fabs(fabs(myLatVal) - distGone);
-	if (distGone > fabs(myLatVal) || 
+	if (distGone > fabs(myLatVal) ||
 	    (distToGo < 10 && fabs(getVel()) < 30))
 	{
 	  comInt(ArCommands::VEL, 0);
@@ -4354,20 +4354,20 @@ void ArRobot::stateReflector()
 	  vel *= -1;
 	comInt(ArCommands::VEL, ArMath::roundShort(vel));
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Non-action move-helper of %d", 
+	  ArLog::log(ArLog::Normal, "Non-action move-helper of %d",
 		     ArMath::roundShort(vel));
       }
-      else if (myParams->hasMoveCommand() && myLatType == LAT_DIST_NEW) 
+      else if (myParams->hasMoveCommand() && myLatType == LAT_DIST_NEW)
       {
 	comInt(ArCommands::MOVE, latVal);
 	myLastLatSent.setToNow();
 	myLatType = LAT_DIST;
 	if (myLogMovementSent)
-	  ArLog::log(ArLog::Normal, "Non-action move of %d", 
+	  ArLog::log(ArLog::Normal, "Non-action move of %d",
 		     latVal);
 	myTryingToMove = true;
       }
-      else if (myLatType == LAT_DIST && 
+      else if (myLatType == LAT_DIST &&
 	  (myLastLatSent.mSecSince() >= myStateReflectionRefreshTime))
       {
 	com(0);
@@ -4385,7 +4385,7 @@ void ArRobot::stateReflector()
       //printf("No lat command sent\n");
     }
     else
-      ArLog::log(ArLog::Terse, 
+      ArLog::log(ArLog::Terse,
 		 "ArRobot::stateReflector: Invalid lat type %d.",
 		 myLatType);
 
@@ -4403,9 +4403,9 @@ void ArRobot::stateReflector()
 	ArLog::log(ArLog::Normal, "%12sAction-but-robot lat max vel of %d", "",
 		   ArMath::roundShort(myLatVelMax));
     }
-    
+
     // first we'll handle all of the accel decel things
-    if (myActionDesired.getLatAccelStrength() >= 
+    if (myActionDesired.getLatAccelStrength() >=
 	ArActionDesired::MIN_STRENGTH)
     {
       latAccel = ArMath::roundShort(myActionDesired.getLatAccel());
@@ -4420,7 +4420,7 @@ void ArRobot::stateReflector()
 		     ArMath::roundShort(latAccel));
       }
     }
-    else if (ArMath::fabs(myLatAccel) > 1 && 
+    else if (ArMath::fabs(myLatAccel) > 1 &&
 	ArMath::fabs(myLastSentLatAccel - myLatAccel) >= 1)
     {
       comInt(ArCommands::LATACCEL,
@@ -4457,7 +4457,7 @@ void ArRobot::stateReflector()
 		   -ArMath::roundShort(myLatDecel));
     }
 
-    if (myActionDesired.getMaxLeftLatVelStrength() >= 
+    if (myActionDesired.getMaxLeftLatVelStrength() >=
 	ArActionDesired::MIN_STRENGTH)
     {
       maxLeftLatVel = myActionDesired.getMaxLeftLatVel();
@@ -4467,7 +4467,7 @@ void ArRobot::stateReflector()
     else
       maxLeftLatVel = myLatVelMax;
 
-    if (myActionDesired.getMaxRightLatVelStrength() >= 
+    if (myActionDesired.getMaxRightLatVelStrength() >=
 	ArActionDesired::MIN_STRENGTH)
     {
       maxRightLatVel = myActionDesired.getMaxRightLatVel();
@@ -4487,7 +4487,7 @@ void ArRobot::stateReflector()
       // MPL commenting out these lines so that if nothing is set
       // it'll just stop
 
-      //latVal = myLastActionLatVal; 
+      //latVal = myLastActionLatVal;
       latVal = 0;
     }
 
@@ -4500,15 +4500,15 @@ void ArRobot::stateReflector()
     if (latVal < 0 && latVal < -maxRightLatVel)
       latVal = (short)-maxRightLatVel;
 
-    if (myActionLatSet && 
+    if (myActionLatSet &&
 	(myLastLatSent.mSecSince() >= myStateReflectionRefreshTime ||
-	 latVal != myLastActionLatVal))			     
+	 latVal != myLastActionLatVal))
     {
       comInt(ArCommands::LATVEL, ArMath::roundShort(latVal));
       myLastLatSent.setToNow();
       if (myLogMovementSent)
 	ArLog::log(ArLog::Normal, "%12sAction lat vel of %d", "",
-		   ArMath::roundShort(latVal));      
+		   ArMath::roundShort(latVal));
     }
     myLastActionLatVal = latVal;
   }
@@ -4516,15 +4516,15 @@ void ArRobot::stateReflector()
 
   if (myLastRotSent.mSecSince() > myStateReflectionRefreshTime &&
       myLastTransSent.mSecSince() > myStateReflectionRefreshTime &&
-      myLastPulseSent.mSecSince() > myStateReflectionRefreshTime && 
-      (!hasLatVel() || 
-       (hasLatVel() &&       
+      myLastPulseSent.mSecSince() > myStateReflectionRefreshTime &&
+      (!hasLatVel() ||
+       (hasLatVel() &&
 	myLastLatSent.mSecSince() > myStateReflectionRefreshTime)))
   {
     com(ArCommands::PULSE);
     myLastPulseSent.setToNow();
     if (myLogMovementSent)
-      ArLog::log(ArLog::Normal, "Pulse"); 
+      ArLog::log(ArLog::Normal, "Pulse");
 
   }
 }
@@ -4538,7 +4538,7 @@ bool ArRobot::handlePacket(ArRobotPacket *packet)
 
   if (myIgnoreNextPacket)
   {
-    if ((packet->getID() == 0x32 || packet->getID() == 0x33))    
+    if ((packet->getID() == 0x32 || packet->getID() == 0x33))
     {
       ArLog::log(ArLog::Normal, "ArRobot: Ignoring motor packet of type 0x%x",
 		 packet->getID());
@@ -4557,7 +4557,7 @@ bool ArRobot::handlePacket(ArRobotPacket *packet)
   myLastPacketReceivedTime = packet->getTimeReceived();
   myConnectionTimeoutMutex.unlock();
 
-  if (packet->getID() == 0xff) 
+  if (packet->getID() == 0xff)
   {
     dropConnection("Losing connection because microcontroller reset.",
 		   "because microcontroller reset");
@@ -4565,7 +4565,7 @@ bool ArRobot::handlePacket(ArRobotPacket *packet)
     return false;
   }
 
-  if (packet->getID() == 0xfe) 
+  if (packet->getID() == 0xfe)
   {
     char buf[100000];
     char tmp[100000];
@@ -4592,11 +4592,11 @@ bool ArRobot::handlePacket(ArRobotPacket *packet)
     return false;
   }
 
-  for (handled = false, it = myPacketHandlerList.begin(); 
-       it != myPacketHandlerList.end() && handled == false; 
+  for (handled = false, it = myPacketHandlerList.begin();
+       it != myPacketHandlerList.end() && handled == false;
        it++)
   {
-    if ((*it) != NULL && (*it)->invokeR(packet)) 
+    if ((*it) != NULL && (*it)->invokeR(packet))
     {
       if (myPacketsReceivedTracking)
 	ArLog::log(ArLog::Normal, "Handled by %s",
@@ -4609,8 +4609,8 @@ bool ArRobot::handlePacket(ArRobotPacket *packet)
     }
   }
   if (!handled)
-    ArLog::log(ArLog::Normal, 
-	       "No packet handler wanted packet with ID: 0x%x", 
+    ArLog::log(ArLog::Normal,
+	       "No packet handler wanted packet with ID: 0x%x",
 	       packet->getID());
   unlock();
   return handled;
@@ -4656,7 +4656,7 @@ void ArRobot::robotUnlocker()
 
 void ArRobot::packetHandler()
 {
-  if (myRunningNonThreaded) 
+  if (myRunningNonThreaded)
     packetHandlerNonThreaded();
   else
     packetHandlerThreadedProcessor();
@@ -4709,10 +4709,10 @@ void ArRobot::packetHandlerNonThreaded()
   {
     if (myPacketsReceivedTracking)
     {
-      ArLog::log(ArLog::Normal, 
-		 "Rcvd: prePacket (%ld) 0x%x at %ld (%ld)", 
-		 myPacketsReceivedTrackingCount, 
-		 packet->getID(), start.mSecSince(), 
+      ArLog::log(ArLog::Normal,
+		 "Rcvd: prePacket (%ld) 0x%x at %ld (%ld)",
+		 myPacketsReceivedTrackingCount,
+		 packet->getID(), start.mSecSince(),
 		 myPacketsReceivedTrackingStarted.mSecSince());
       myPacketsReceivedTrackingCount++;
     }
@@ -4734,18 +4734,18 @@ void ArRobot::packetHandlerNonThreaded()
 
   if (isCycleChained())
     timeToWait = getCycleTime() * 2 - start.mSecSince();
-  
+
   if(timeToWait < 0) timeToWait = 0;
 
   // if we didn't get a sip and we're chained to the sip, wait for the sip
-  while (isCycleChained() && !sipHandled && isRunning() && 
+  while (isCycleChained() && !sipHandled && isRunning() &&
 	 (packet = myReceiver.receivePacket((unsigned int) timeToWait)) != NULL)
   {
     if (myPacketsReceivedTracking)
     {
-      ArLog::log(ArLog::Normal, "Rcvd: Packet (%ld) 0x%x at %ld (%ld)", 
-		 myPacketsReceivedTrackingCount, 
-		 packet->getID(), start.mSecSince(), 
+      ArLog::log(ArLog::Normal, "Rcvd: Packet (%ld) 0x%x at %ld (%ld)",
+		 myPacketsReceivedTrackingCount,
+		 packet->getID(), start.mSecSince(),
 		 myPacketsReceivedTrackingStarted.mSecSince());
       myPacketsReceivedTrackingCount++;
     }
@@ -4759,12 +4759,12 @@ void ArRobot::packetHandlerNonThreaded()
   }
 
   myConnectionTimeoutMutex.lock();
-  if (myTimeoutTime > 0 && 
+  if (myTimeoutTime > 0 &&
       ((-myLastOdometryReceivedTime.mSecTo()) > myTimeoutTime))
   {
     char buf[10000];
-    sprintf(buf, 
-	    "Losing connection because no odometry received from microcontroller in %ld milliseconds (greater than the timeout of %d).", 
+    sprintf(buf,
+	    "Losing connection because no odometry received from microcontroller in %ld milliseconds (greater than the timeout of %d).",
 	    (-myLastOdometryReceivedTime.mSecTo()),
 	    myTimeoutTime);
     myConnectionTimeoutMutex.unlock();
@@ -4776,11 +4776,11 @@ void ArRobot::packetHandlerNonThreaded()
   }
 
   myConnectionTimeoutMutex.lock();
-  if (myTimeoutTime > 0 && 
+  if (myTimeoutTime > 0 &&
       ((-myLastPacketReceivedTime.mSecTo()) > myTimeoutTime))
   {
     char buf[10000];
-    sprintf(buf, "Losing connection because nothing received from robot in %ld milliseconds (greater than the timeout of %d).", 
+    sprintf(buf, "Losing connection because nothing received from robot in %ld milliseconds (greater than the timeout of %d).",
 	       (-myLastPacketReceivedTime.mSecTo()),
 	       myTimeoutTime);
     myConnectionTimeoutMutex.unlock();
@@ -4819,7 +4819,7 @@ void ArRobot::packetHandlerThreadedProcessor()
   //ArLog::log(ArLog::Normal, "Rcvd: start %ld", myPacketsReceivedTrackingStarted.mSecSince());
 
   start.setToNow();
-  
+
   // read all the packets that are available in our time window (twice
   // packet cycle), if we get the sip we stop...
   while (!sipHandled && isRunning())
@@ -4833,8 +4833,8 @@ void ArRobot::packetHandlerThreadedProcessor()
       myPacketList.pop_front();
       // see if there are more sips, since if so we'll keep chugging
       // through the list
-      for (it = myPacketList.begin(); 
-	   !anotherSip && it != myPacketList.end(); 
+      for (it = myPacketList.begin();
+	   !anotherSip && it != myPacketList.end();
 	   it++)
       {
 	if (((*it)->getID() & 0xf0) == 0x30)
@@ -4860,8 +4860,8 @@ void ArRobot::packetHandlerThreadedProcessor()
 	  (ret = myPacketReceivedCondition.timedWait((unsigned int) timeToWait)) != 0)
       {
 	if (myCycleWarningTime != 0)
-	  ArLog::log(ArLog::Normal, "ArRobot::myPacketReader: Timed out (%d) at %d (%d into cycle after sleeping %d)", 	     
-		     ret, myPacketsReceivedTrackingStarted.mSecSince(), 
+	  ArLog::log(ArLog::Normal, "ArRobot::myPacketReader: Timed out (%d) at %d (%d into cycle after sleeping %d)",
+		     ret, myPacketsReceivedTrackingStarted.mSecSince(),
 		     start.mSecSince(), timeToWait);
 	break;
       }
@@ -4870,19 +4870,19 @@ void ArRobot::packetHandlerThreadedProcessor()
 	continue;
       }
     }
-    
+
     handlePacket(packet);
     if ((packet->getID() & 0xf0) == 0x30)
     {
       // only mark the sip handled if it was the only one in the buffer
       if (!anotherSip)
 	sipHandled = true;
-      
+
       if (myPacketsReceivedTracking)
       {
-	ArLog::log(ArLog::Normal, "Rcvd: Packet (%ld) 0x%x at %ld (%ld)", 
-		   myPacketsReceivedTrackingCount, 
-		   packet->getID(), start.mSecSince(), 
+	ArLog::log(ArLog::Normal, "Rcvd: Packet (%ld) 0x%x at %ld (%ld)",
+		   myPacketsReceivedTrackingCount,
+		   packet->getID(), start.mSecSince(),
 		   myPacketsReceivedTrackingStarted.mSecSince());
 	myPacketsReceivedTrackingCount++;
       }
@@ -4891,10 +4891,10 @@ void ArRobot::packetHandlerThreadedProcessor()
     {
       if (myPacketsReceivedTracking)
       {
-	ArLog::log(ArLog::Normal, 
-		   "Rcvd: prePacket (%ld) 0x%x at %ld (%ld)", 
-		   myPacketsReceivedTrackingCount, 
-		   packet->getID(), start.mSecSince(), 
+	ArLog::log(ArLog::Normal,
+		   "Rcvd: prePacket (%ld) 0x%x at %ld (%ld)",
+		   myPacketsReceivedTrackingCount,
+		   packet->getID(), start.mSecSince(),
 		   myPacketsReceivedTrackingStarted.mSecSince());
 	myPacketsReceivedTrackingCount++;
       }
@@ -4905,12 +4905,12 @@ void ArRobot::packetHandlerThreadedProcessor()
   }
 
   myConnectionTimeoutMutex.lock();
-  if (myTimeoutTime > 0 && 
+  if (myTimeoutTime > 0 &&
       ((-myLastOdometryReceivedTime.mSecTo()) > myTimeoutTime))
   {
     char buf[10000];
-    sprintf(buf, 
-	    "Losing connection because no odometry received from robot in %ld milliseconds (greater than the timeout of %d).", 
+    sprintf(buf,
+	    "Losing connection because no odometry received from robot in %ld milliseconds (greater than the timeout of %d).",
 	    (-myLastOdometryReceivedTime.mSecTo()),
 	    myTimeoutTime);
     myConnectionTimeoutMutex.unlock();
@@ -4922,11 +4922,11 @@ void ArRobot::packetHandlerThreadedProcessor()
   }
 
   myConnectionTimeoutMutex.lock();
-  if (myTimeoutTime > 0 && 
+  if (myTimeoutTime > 0 &&
       ((-myLastPacketReceivedTime.mSecTo()) > myTimeoutTime))
   {
     char buf[10000];
-    sprintf(buf, "Losing connection because nothing received from robot in %ld milliseconds (greater than the timeout of %d).", 
+    sprintf(buf, "Losing connection because nothing received from robot in %ld milliseconds (greater than the timeout of %d).",
 	       (-myLastPacketReceivedTime.mSecTo()),
 	       myTimeoutTime);
     myConnectionTimeoutMutex.unlock();
@@ -4958,7 +4958,7 @@ AREXPORT void ArRobot::packetHandlerThreadedReader()
 
   while (isRunning())
   {
-    if (myConn == NULL || 
+    if (myConn == NULL ||
 	myConn->getStatus() != ArDeviceConnection::STATUS_OPEN)
     {
       ArUtil::sleep(1);
@@ -4985,7 +4985,7 @@ AREXPORT void ArRobot::packetHandlerThreadedReader()
     {
       if (lastPacketReceived.mSecSince() > 1000)
       {
-	ArLog::log(ArLog::Normal, 
+	ArLog::log(ArLog::Normal,
 		   "ArRobot::packetReader: Took longer than 1000 mSec for packet (last packet %d mSec ago)",
 		   lastPacketReceived.mSecSince());
 	lastPacketReceived.setToNow();
@@ -4993,15 +4993,15 @@ AREXPORT void ArRobot::packetHandlerThreadedReader()
     }
     */
   }
-  
+
   myReceiver.setAllocatingPackets(isAllocatingPackets);
 }
 
 /**
    Runs the resolver on the actions, it just saves these values for
    use by the stateReflector, otherwise it sends these values straight
-   down to the robot.  
-   @see addAction 
+   down to the robot.
+   @see addAction
    @see remAction
 **/
 AREXPORT void ArRobot::actionHandler()
@@ -5010,15 +5010,15 @@ AREXPORT void ArRobot::actionHandler()
 
   if (myResolver == NULL || myActions.size() == 0 || !isConnected())
     return;
-  
+
   actDesired = myResolver->resolve(&myActions, this, myLogActions);
-  
+
   myActionDesired.reset();
 
   if (actDesired == NULL)
     return;
 
-  myActionDesired.merge(actDesired);  
+  myActionDesired.merge(actDesired);
 
   if (myLogActions)
   {
@@ -5068,7 +5068,7 @@ AREXPORT unsigned int ArRobot::getCycleWarningTime()
 }
 
 /**
-   Sets the number of milliseconds between cycles, at each cycle is 
+   Sets the number of milliseconds between cycles, at each cycle is
    when all packets are processed, all sensors are interpretted, all
    actions are called, and all user tasks are serviced.  Be warned,
    if you set this too small you could overflow your serial connection.
@@ -5110,7 +5110,7 @@ AREXPORT int ArRobot::getStabilizingTime() const
 }
 
 /**
-   Finds the number of milliseconds between cycles, at each cycle is 
+   Finds the number of milliseconds between cycles, at each cycle is
    when all packets are processed, all sensors are interpretted, all
    actions are called, and all user tasks are serviced.  Be warned,
    if you set this too small you could overflow your serial connection.
@@ -5149,17 +5149,17 @@ AREXPORT unsigned int ArRobot::getConnectionCycleMultiplier() const
 }
 
 
-/** 
-    This function is only for serious developers, it basically runs the 
+/**
+    This function is only for serious developers, it basically runs the
     loop once.  You would use this function if you were wanting to use robot
-    control in some other monolithic program, so you could work within its 
+    control in some other monolithic program, so you could work within its
     framework, rather than trying to get it to work in ARIA.
 **/
 AREXPORT void ArRobot::loopOnce()
 {
   if (mySyncTaskRoot != NULL)
     mySyncTaskRoot->run();
-  
+
   incCounter();
 }
 
@@ -5182,7 +5182,7 @@ AREXPORT bool ArRobot::isRightTableSensingIRTriggered() const
 {
   if (myParams->haveTableSensingIR())
   {
-    if (myParams->haveNewTableSensingIR() && myIODigInSize > 3) 
+    if (myParams->haveNewTableSensingIR() && myIODigInSize > 3)
       return !(getIODigIn(3) & ArUtil::BIT0);
     else
       return !(getDigIn() & ArUtil::BIT1);
@@ -5194,7 +5194,7 @@ AREXPORT bool ArRobot::isLeftBreakBeamTriggered() const
 {
   if (myParams->haveTableSensingIR())
   {
-    if (myParams->haveNewTableSensingIR() && myIODigInSize > 3) 
+    if (myParams->haveNewTableSensingIR() && myIODigInSize > 3)
       return !(getIODigIn(3) & ArUtil::BIT2);
     else
       return !(getDigIn() & ArUtil::BIT3);
@@ -5206,7 +5206,7 @@ AREXPORT bool ArRobot::isRightBreakBeamTriggered() const
 {
   if (myParams->haveTableSensingIR())
   {
-    if (myParams->haveNewTableSensingIR() && myIODigInSize > 3) 
+    if (myParams->haveNewTableSensingIR() && myIODigInSize > 3)
       return !(getIODigIn(3) & ArUtil::BIT3);
     else
       return !(getDigIn() & ArUtil::BIT2);
@@ -5236,11 +5236,11 @@ AREXPORT int ArRobot::getSonarPacCount() const
 bool ArRobot::processMotorPacket(ArRobotPacket *packet)
 {
 
-  if (packet->getID() != 0x32 && packet->getID() != 0x33) 
+  if (packet->getID() != 0x32 && packet->getID() != 0x33)
     return false;
 
   // upkeep the counting variable
-  if (myTimeLastMotorPacket != time(NULL)) 
+  if (myTimeLastMotorPacket != time(NULL))
   {
     myTimeLastMotorPacket = time(NULL);
     myMotorPacCount = myMotorPacCurrentCount;
@@ -5260,7 +5260,7 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
     myFakeFirstEncoderPose = false;
   }
 
-  int qx, qy, qth; 
+  int qx, qy, qth;
 
   if (myFirstEncoderPose)
   {
@@ -5270,12 +5270,12 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
     myFirstEncoderPose = false;
     myRawEncoderPose.setPose(
 	    myParams->getDistConvFactor() * x,
-	    myParams->getDistConvFactor() * y, 
+	    myParams->getDistConvFactor() * y,
 	    ArMath::radToDeg(myParams->getAngleConvFactor() * (double)th));
     myEncoderPose = myRawEncoderPose;
     myEncoderTransform.setTransform(myEncoderPose, myGlobalPose);
   }
-  else 
+  else
   {
     qx = x - myLastX;
     qy = y - myLastY;
@@ -5283,21 +5283,21 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   }
 
 
-  //ArLog::log(ArLog::Terse, "qx %d qy %d,  x %d y %d,  lastx %d lasty %d", qx, qy, x, y, myLastX, myLastY);  
+  //ArLog::log(ArLog::Terse, "qx %d qy %d,  x %d y %d,  lastx %d lasty %d", qx, qy, x, y, myLastX, myLastY);
   myLastX = x;
   myLastY = y;
   myLastTh = th;
 
-  if (qx > 0x1000) 
+  if (qx > 0x1000)
     qx -= 0x8000;
   if (qx < -0x1000)
     qx += 0x8000;
 
-  if (qy > 0x1000) 
+  if (qy > 0x1000)
     qy -= 0x8000;
   if (qy < -0x1000)
     qy += 0x8000;
-  
+
   double deltaX = myParams->getDistConvFactor() * (double)qx;
   double deltaY = myParams->getDistConvFactor() * (double)qy;
   double deltaTh = ArMath::radToDeg(myParams->getAngleConvFactor() * (double)qth);
@@ -5320,10 +5320,10 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   }
 
   myStallValue = packet->bufToByte2();
-  
-  //ArLog::log("x %.1f y %.1f th %.1f vel %.1f voltage %.1f", myX, myY, myTh, 
+
+  //ArLog::log("x %.1f y %.1f th %.1f vel %.1f voltage %.1f", myX, myY, myTh,
   //myVel, myBatteryVoltage);
-  if (!myKeepControlRaw) 
+  if (!myKeepControlRaw)
     myControl = ArMath::fixAngle(ArMath::radToDeg(
 					 myParams->getAngleConvFactor() *
 					 (packet->bufToByte2() - th)));
@@ -5342,7 +5342,7 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
     assert(sonarRange >= 0);
     processNewSonar(sonarNum, (unsigned int) sonarRange, packet->getTimeReceived());
   }
-  
+
   if (packet->getDataLength() - packet->getDataReadLength() > 0)
   {
     myAnalogPortSelected = packet->bufToUByte2();
@@ -5376,18 +5376,18 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   if (packet->getDataLength() - packet->getDataReadLength() > 0)
     myRotVel = (double)packet->bufToByte2() / 10.0;
   else
-    myRotVel = ArMath::radToDeg((myRightVel - myLeftVel) / 2.0 * 
+    myRotVel = ArMath::radToDeg((myRightVel - myLeftVel) / 2.0 *
 				myParams->getDiffConvFactor());
 
   if (packet->getDataLength() - packet->getDataReadLength() > 0)
   {
     myHasFaultFlags = true;
-    myFaultFlags = packet->bufToUByte2();  
+    myFaultFlags = packet->bufToUByte2();
   }
   else
   {
     myHasFaultFlags = false;
-    myFaultFlags = 0; //packet->bufToUByte2();  
+    myFaultFlags = 0; //packet->bufToUByte2();
   }
 
   if (packet->getDataLength() - packet->getDataReadLength() > 0)
@@ -5427,7 +5427,7 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
 
     const uint32_t uCUSec = packet->bufToUByte4();
     // make sure we get a good value
-    if ((myPacketsReceivedTracking || myLogMovementReceived) && 
+    if ((myPacketsReceivedTracking || myLogMovementReceived) &&
 	myMTXTimeUSecCB != NULL && myMTXTimeUSecCB->invokeR(&lpcNowUSec))
     {
       mSecSince = packet->getTimeReceived().mSecSinceLL(now);
@@ -5451,19 +5451,19 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
     }
 
     if (myPacketsReceivedTracking)
-      ArLog::log(ArLog::Normal, "MotorPacketTiming: commDiff %lld fpgaNowDiff %2d.%03d fpgaPacketDiff %2d.%03d bytes %d\nFPGA:uC  %6u.%03u.%.03u\nFPGA:lpcNow %6u.%03u.%.03u\nArTime:1stByte %6lld.%03lld\nArTime:now     %6lld.%.03lld\nFPGA:lpcPacket %6u.%03u.%03u", 
-		 mSecSince, 
+      ArLog::log(ArLog::Normal, "MotorPacketTiming: commDiff %lld fpgaNowDiff %2d.%03d fpgaPacketDiff %2d.%03d bytes %d\nFPGA:uC  %6u.%03u.%.03u\nFPGA:lpcNow %6u.%03u.%.03u\nArTime:1stByte %6lld.%03lld\nArTime:now     %6lld.%.03lld\nFPGA:lpcPacket %6u.%03u.%03u",
+		 mSecSince,
 		 ((lpcNowUSec - uCUSec) % 1000000) / 1000, (lpcNowUSec - uCUSec) % 1000,
-		 ((lpcUSec - uCUSec) % 1000000) / 1000, (lpcUSec - uCUSec) % 1000,		 
+		 ((lpcUSec - uCUSec) % 1000000) / 1000, (lpcUSec - uCUSec) % 1000,
 		 packet->getLength(),
-		 
+
 		 uCUSec / 1000000, (uCUSec % 1000000) / 1000, uCUSec % 1000,
 		 lpcNowUSec / 1000000, (lpcNowUSec % 1000000) / 1000, lpcNowUSec % 1000,
-		 packet->getTimeReceived().getSecLL(), 
+		 packet->getTimeReceived().getSecLL(),
 		 packet->getTimeReceived().getMSecLL(),
 		 now.getSecLL(), now.getMSecLL(),
 		 lpcUSec / 1000000, (lpcUSec % 1000000) / 1000, lpcUSec % 1000);
-    
+
   }
   else if (myLogMovementReceived)
   {
@@ -5471,7 +5471,7 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
     /// MPL adding this so that each place the pose interpolation is
     /// used it doesn't have to account for the odometry delay
     recvTime.addMSec(-myOdometryDelay);
-    
+
     char buf[1024];
     sprintf(buf, " time: %6lld.%03lld.000",
 	    recvTime.getSecLL(), recvTime.getMSecLL());
@@ -5481,19 +5481,19 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   if (packet->getDataLength() - packet->getDataReadLength() > 0)
   {
     myHasFlags3 = true;
-    myFlags3 = (int) packet->bufToUByte4();      
+    myFlags3 = (int) packet->bufToUByte4();
   }
   else
   {
     myHasFlags3 = false;
     myFlags3 = 0;
   }
-  
+
   if(myLogSIPContents)
   {
     ArLog::log(ArLog::Normal, "SIP Contents:\n\tx=%d, y=%d, th=%d, lvel=%.2f, rvel=%.2f, battery=%.1f, stallval=0x%x, control=%d, compass=%d",
       x, y, th, myLeftVel, myRightVel, myBatteryVoltage, myStallValue, myControl, myCompass);
-    ArLog::log(ArLog::Normal, "\tnumSonar=%d, gripstate=%d, anport=%d, analog=%d, digin=0x%x, digout=0x%x, batteryX10=%d, chargestage=%d rotvel=%.2f", 
+    ArLog::log(ArLog::Normal, "\tnumSonar=%d, gripstate=%d, anport=%d, analog=%d, digin=0x%x, digout=0x%x, batteryX10=%d, chargestage=%d rotvel=%.2f",
       numReadings, (char)myAnalogPortSelected, (char)(myAnalogPortSelected>>8), myAnalog, myDigIn, myDigOut, myRealBatteryVoltage, (int)myChargeState, myRotVel);
     if(myHasFaultFlags)
       ArLog::log(ArLog::Normal, "\tfaultflags=0x%x", myFaultFlags);
@@ -5507,11 +5507,11 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   }
 
   /*
-    Okay how this works is like so.  
+    Okay how this works is like so.
 
     We keep around the raw encoder position, because we must use this
     to find differences between last position and this position.
-    
+
     We find the difference in x and y positions (deltaX and deltaY)
     and keep these around for later use, but we also add these to our
     raw encoder readings for X and Y.  We also find the change in
@@ -5543,13 +5543,13 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
     Note that this leaves a difference between rawEncoder heading and
     our heading, which is fine, BUT if you are sending heading
     commands to the robot you need to compenstate for the difference
-    between these. 
-    
+    between these.
+
     Note above that we return deltaTh instead of just heading so that
     we can turn inertial on and off without losing track of where
     we're at... since we're just adding in deltas from the heading it
     doesn't matter how we switch around the callback.
-    
+
   **/
 
   myRawEncoderPose.setPose(myRawEncoderPose.getX() + deltaX, myRawEncoderPose.getY() + deltaY, myRawEncoderPose.getTh() + deltaTh);
@@ -5560,10 +5560,10 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   {
     const ArPoseWithTime deltaPose(deltaX, deltaY, deltaTh,
 			     packet->getTimeReceived());
-    deltaTh = myEncoderCorrectionCB->invokeR(deltaPose);   
+    deltaTh = myEncoderCorrectionCB->invokeR(deltaPose);
     const ArTransform trans(ArPose(0, 0, myRawEncoderPose.getTh()),
 		      ArPose(0, 0,
-			     ArMath::addAngle(myEncoderPose.getTh(), 
+			     ArMath::addAngle(myEncoderPose.getTh(),
 					      deltaTh)));
 
     const ArPose rotatedDelta = trans.doTransform(ArPose(deltaX, deltaY, 0));
@@ -5590,35 +5590,35 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
 
   /*
     if (myLogMovementReceived)
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "Global (%5.0f %5.0f %5.0f) Encoder (%5.0f %5.0f %5.0f) Raw (%5.0f %5.0f %5.0f) Rawest (%5d %5d %5d) Delta (%5.0f %5.0f %5.0f) Conv %5.2f",
 	       myGlobalPose.getX(), myGlobalPose.getY(),
 	       myGlobalPose.getTh(),
 	       myEncoderPose.getX(), myEncoderPose.getY(),
 	       myEncoderPose.getTh(),
-	       myRawEncoderPose.getX(), myRawEncoderPose.getY(), 
+	       myRawEncoderPose.getX(), myRawEncoderPose.getY(),
 	       myRawEncoderPose.getTh(), x, y, th, deltaX, deltaY, deltaTh,
-	       myParams->getDistConvFactor());	      
+	       myParams->getDistConvFactor());
   */
-  if (myLogMovementReceived && 
+  if (myLogMovementReceived &&
       (fabs(deltaX) > .0001 || fabs(deltaY) > .0001 || fabs(deltaTh) > .0001))
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "Global: %5.0f %5.0f %7.1f GlobalDelta: %5.0f %5.0f %7.1f uC: %5.0f %5.0f %7.1f uCDelta: %5.0f %5.0f %7.1f RawUC: %5d %5d %5d%s",
 	       myGlobalPose.getX(), myGlobalPose.getY(),
 	       myGlobalPose.getTh(),
-	       myGlobalPose.getX() - myLastGlobalPose.getX(), 
-	       myGlobalPose.getY() - myLastGlobalPose.getY(), 
+	       myGlobalPose.getX() - myLastGlobalPose.getX(),
+	       myGlobalPose.getY() - myLastGlobalPose.getY(),
 	       ArMath::subAngle(myGlobalPose.getTh(), myLastGlobalPose.getTh()),
 	       myEncoderPose.getX(), myEncoderPose.getY(),
 	       myEncoderPose.getTh(),
-	       deltaX, deltaY, deltaTh, x, y, th, 
+	       deltaX, deltaY, deltaTh, x, y, th,
 	       movementReceivedTimingStr.c_str());
 
   myLastGlobalPose = myGlobalPose;
 
   if (myLogMovementReceived && sqrt(deltaX*deltaX + deltaY*deltaY) > 1000)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot: Travelled over 1000 in a cycle, which is unlikely");
     ArLog::logBacktrace(ArLog::Normal);
   }
@@ -5626,15 +5626,15 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   if (myLogVelocitiesReceived)
   {
     if (!hasLatVel())
-      ArLog::log(ArLog::Normal, 
+      ArLog::log(ArLog::Normal,
 		 "     TransVel: %4.0f RotVel: %4.0f dTh: %4.0f Th: %4.0f TransAcc: %4.0f RotAcc: %4.0f ddTh: %4.0f",
-		 myVel, myRotVel, myLastHeading - getTh(), getTh(), 
+		 myVel, myRotVel, myLastHeading - getTh(), getTh(),
 		 myVel - myLastVel, myRotVel - myLastRotVel,
 		 myLastDeltaHeading - (myLastHeading - getTh()));
     else
-      ArLog::log(ArLog::Normal, 
+      ArLog::log(ArLog::Normal,
 		 "     TransVel: %4.0f RotVel: %4.0f dTh: %4.0f Th: %4.0f DTrans %4.0f DRot %4.0f ddth: %4.0f LatVel: %4.0f DLat: %4.0f",
-		 myVel, myRotVel, myLastHeading - getTh(), getTh(), 
+		 myVel, myRotVel, myLastHeading - getTh(), getTh(),
 		 myVel - myLastVel, myRotVel - myLastRotVel,
 		 myLastDeltaHeading - (myLastHeading - getTh()),
 		 myLatVel, myLatVel - myLastLatVel);
@@ -5655,7 +5655,7 @@ bool ArRobot::processMotorPacket(ArRobotPacket *packet)
   // MPL this had come in handy while debugging the intermittent lost
   // issue that looked like timing
   //ArLog::log(ArLog::Normal, "Robot packet %lld mSec old", packetTime.mSecSince());
-  
+
   myConnectionTimeoutMutex.lock();
   myLastOdometryReceivedTime = packetTime;
   myConnectionTimeoutMutex.unlock();
@@ -5685,10 +5685,10 @@ void ArRobot::processNewSonar(int number, unsigned int range,
   if ((it = mySonars.find(number)) != mySonars.end())
   {
     sonar = (*it).second;
-    sonar->newData(range, getPose(), getEncoderPose(), getToGlobalTransform(), 
-		   getCounter(), timeReceived); 
-		 
-    if (myTimeLastSonarPacket != time(NULL)) 
+    sonar->newData(range, getPose(), getEncoderPose(), getToGlobalTransform(),
+		   getCounter(), timeReceived);
+
+    if (myTimeLastSonarPacket != time(NULL))
     {
       myTimeLastSonarPacket = time(NULL);
       mySonarPacCount = mySonarPacCurrentCount;
@@ -5748,7 +5748,7 @@ bool ArRobot::processIOPacket(ArRobotPacket *packet)
    @param num the sonar number to check, should be between 0 and the number of
    sonar, the function won't fail if a bad number is given, will just return
    -1
-   @return -1 if the sonar has never returned a reading, otherwise the sonar 
+   @return -1 if the sonar has never returned a reading, otherwise the sonar
    range, which is the distance from the physical sonar disc to where the sonar
    bounced back
    @see getNumSonar
@@ -5756,7 +5756,7 @@ bool ArRobot::processIOPacket(ArRobotPacket *packet)
 AREXPORT int ArRobot::getSonarRange(int num) const
 {
   std::map<int, ArSensorReading *>::const_iterator it;
-  
+
   if ((it = mySonars.find(num)) != mySonars.end())
     return (int) (*it).second->getRange();
   else
@@ -5776,7 +5776,7 @@ AREXPORT int ArRobot::getSonarRange(int num) const
 AREXPORT bool ArRobot::isSonarNew(int num) const
 {
   std::map<int, ArSensorReading *>::const_iterator it;
-  
+
   if ((it = mySonars.find(num)) != mySonars.end())
     return (*it).second->isNew(getCounter());
   else
@@ -5788,17 +5788,17 @@ AREXPORT bool ArRobot::isSonarNew(int num) const
    sonar, the function won't fail if a bad number is given, will just return
    false
    @return NULL if there is no sonar defined for the given number, otherwise
-   it returns a pointer to an instance of the ArSensorReading, note that this 
+   it returns a pointer to an instance of the ArSensorReading, note that this
    class retains ownership, so the instance pointed to should not be deleted
    and no pointers to it should be stored.  Note that often there will be sonar
-   defined but no readings for it (since the readings may be created by the 
+   defined but no readings for it (since the readings may be created by the
    parameter reader), if there has never been a reading from the sonar then
    the range of that sonar will be -1 and its counterTaken value will be 0
 **/
 AREXPORT ArSensorReading *ArRobot::getSonarReading(int num) const
 {
   std::map<int, ArSensorReading *>::const_iterator it;
-  
+
   if ((it = mySonars.find(num)) != mySonars.end())
     return (*it).second;
   else
@@ -5841,7 +5841,7 @@ AREXPORT bool ArRobot::comInt(unsigned char command, short int argument)
 AREXPORT bool ArRobot::com2Bytes(unsigned char command, char high, char low)
 {
   if (myPacketsSentTracking)
-    ArLog::log(ArLog::Normal, "Sent: com2Bytes(%d, %d, %d)", command, 
+    ArLog::log(ArLog::Normal, "Sent: com2Bytes(%d, %d, %d)", command,
 	       high, low);
   return mySender.com2Bytes(command, high, low);
 }
@@ -5855,7 +5855,7 @@ AREXPORT bool ArRobot::com2Bytes(unsigned char command, char high, char low)
 AREXPORT bool ArRobot::comStr(unsigned char command, const char *argument)
 {
   if (myPacketsSentTracking)
-    ArLog::log(ArLog::Normal, "Sent: comStr(%d, '%s')", command, 
+    ArLog::log(ArLog::Normal, "Sent: comStr(%d, '%s')", command,
 	       argument);
   return mySender.comStr(command, argument);
 }
@@ -5864,12 +5864,12 @@ AREXPORT bool ArRobot::comStr(unsigned char command, const char *argument)
  * Sends a length-prefixed string command to the robot, copying 'size'
  * bytes of data from 'str' into the packet.
    @param command the command number to send
-   @param str copy data to send from this character array 
+   @param str copy data to send from this character array
    @param size length of the string to send; copy this many bytes from 'str'; use this value as the length prefix byte before the sent string. This length must be less than the maximum packet size of 200.
    @return whether the command could be sent or not
    @sa ArCommands
 **/
-AREXPORT bool ArRobot::comStrN(unsigned char command, const char *str, 
+AREXPORT bool ArRobot::comStrN(unsigned char command, const char *str,
 			       size_t size)
 {
   if (myPacketsSentTracking)
@@ -5899,7 +5899,7 @@ AREXPORT int ArRobot::getClosestSonarRange(double startAngle, double endAngle) c
   num = getClosestSonarNumber(startAngle, endAngle);
   if (num == -1)
     return -1;
-  else 
+  else
     return getSonarRange(num);
 }
 
@@ -5911,7 +5911,7 @@ AREXPORT int ArRobot::getClosestSonarNumber(double startAngle, double endAngle) 
   int closestSonar = -1;
   bool noReadings = true;
 
-  for (i = 0; i < getNumSonar(); i++) 
+  for (i = 0; i < getNumSonar(); i++)
   {
     sonar = getSonarReading(i);
     if (sonar == NULL)
@@ -5990,7 +5990,7 @@ AREXPORT void ArRobot::remRangeDevice(ArRangeDevice *device)
    @param ignoreCase true to ignore case, false to pay attention to it
    @return if found, a range device with the given name, if not found NULL
 **/
-AREXPORT ArRangeDevice *ArRobot::findRangeDevice(const char *name, 
+AREXPORT ArRangeDevice *ArRobot::findRangeDevice(const char *name,
 						 bool ignoreCase)
 {
   std::list<ArRangeDevice *>::iterator it;
@@ -5999,7 +5999,7 @@ AREXPORT ArRangeDevice *ArRobot::findRangeDevice(const char *name,
   for (it = myRangeDeviceList.begin(); it != myRangeDeviceList.end(); ++it)
   {
     device = (*it);
-    if ((ignoreCase && strcasecmp(name, device->getName()) == 0) || 
+    if ((ignoreCase && strcasecmp(name, device->getName()) == 0) ||
 	(!ignoreCase && strcmp(name, device->getName()) == 0))
     {
       return device;
@@ -6022,7 +6022,7 @@ AREXPORT const ArRangeDevice *ArRobot::findRangeDevice(const char *name,
   for (it = myRangeDeviceList.begin(); it != myRangeDeviceList.end(); ++it)
   {
     device = (*it);
-    if ((ignoreCase && strcasecmp(name, device->getName()) == 0) || 
+    if ((ignoreCase && strcasecmp(name, device->getName()) == 0) ||
 	(!ignoreCase && strcmp(name, device->getName()) == 0))
     {
       return device;
@@ -6031,9 +6031,9 @@ AREXPORT const ArRangeDevice *ArRobot::findRangeDevice(const char *name,
   return NULL;
 }
 
-/** 
+/**
     This gets the list of range devices attached to this robot, do NOT
-    manipulate this list directly.  If you want to manipulate use the 
+    manipulate this list directly.  If you want to manipulate use the
     appropriate addRangeDevice, or remRangeDevice
     @return the list of range dvices attached to this robot
 **/
@@ -6059,20 +6059,20 @@ AREXPORT bool ArRobot::hasRangeDevice(ArRangeDevice *device) const
 /**
  *  Find the closest reading from any range device's set of current readings
  *  within a polar region or "slice" defined by the given angle range.
- *  This function iterates through each registered range device (see 
+ *  This function iterates through each registered range device (see
  *  addRangeDevice()), calls ArRangeDevice::lockDevice(), uses
  *  ArRangeDevice::currentReadingPolar() to find a reading, then calls
  *  ArRangeDevice::unlockDevice().
  *
  *  @copydoc ArRangeDevice::currentReadingPolar()
- *  @param rangeDevice If not null, then a pointer to the ArRangeDevice 
+ *  @param rangeDevice If not null, then a pointer to the ArRangeDevice
  *    that provided the returned reading is placed in this variable.
    @param useLocationDependentDevices If false, ignore sensor devices that are "location dependent". If true, include them in this check.
  *
 **/
 
 AREXPORT double ArRobot::checkRangeDevicesCurrentPolar(
-	double startAngle, double endAngle, double *angle, 
+	double startAngle, double endAngle, double *angle,
 	const ArRangeDevice **rangeDevice,
 	bool useLocationDependentDevices) const
 {
@@ -6092,13 +6092,13 @@ AREXPORT double ArRobot::checkRangeDevicesCurrentPolar(
       device->unlockDevice();
       continue;
     }
-    if (!foundOne || 
+    if (!foundOne ||
 	(tempDist = device->currentReadingPolar(startAngle, endAngle,
 						&tempAngle)) < closest)
     {
       if (!foundOne)
       {
-	closest = device->currentReadingPolar(startAngle, endAngle, 
+	closest = device->currentReadingPolar(startAngle, endAngle,
 					      &closeAngle);
 	closestRangeDevice = device;
       }
@@ -6119,26 +6119,26 @@ AREXPORT double ArRobot::checkRangeDevicesCurrentPolar(
   if (rangeDevice != NULL)
     *rangeDevice = closestRangeDevice;
   return closest;
-  
+
 }
 
 
 /**
  *  Find the closest reading from any range device's set of cumulative readings
  *  within a polar region or "slice" defined by the given angle range.
- *  This function iterates through each registered range device (see 
+ *  This function iterates through each registered range device (see
  *  addRangeDevice()), calls ArRangeDevice::lockDevice(), uses
  *  ArRangeDevice::cumulativeReadingPolar() to find a reading, then calls
  *  ArRangeDevice::unlockDevice().
  *
  *  @copydoc ArRangeDevice::cumulativeReadingPolar()
- *  @param rangeDevice If not null, then a pointer to the ArRangeDevice 
+ *  @param rangeDevice If not null, then a pointer to the ArRangeDevice
  *    that provided the returned reading is placed in this variable.
    @param useLocationDependentDevices If false, ignore sensor devices that are "location dependent". If true, include them in this check.
 **/
 AREXPORT double ArRobot::checkRangeDevicesCumulativePolar(
-	double startAngle, double endAngle, double *angle, 
-	const ArRangeDevice **rangeDevice, 
+	double startAngle, double endAngle, double *angle,
+	const ArRangeDevice **rangeDevice,
 	bool useLocationDependentDevices) const
 {
   double closest = 32000;
@@ -6157,13 +6157,13 @@ AREXPORT double ArRobot::checkRangeDevicesCumulativePolar(
       device->unlockDevice();
       continue;
     }
-    if (!foundOne || 
+    if (!foundOne ||
 	(tempDist = device->cumulativeReadingPolar(startAngle, endAngle,
 						 &tempAngle)) < closest)
     {
       if (!foundOne)
       {
-	closest = device->cumulativeReadingPolar(startAngle, endAngle, 
+	closest = device->cumulativeReadingPolar(startAngle, endAngle,
 					      &closeAngle);
 	closestRangeDevice = device;
       }
@@ -6184,11 +6184,11 @@ AREXPORT double ArRobot::checkRangeDevicesCumulativePolar(
   if (rangeDevice != NULL)
     *rangeDevice = closestRangeDevice;
   return closest;
-  
+
 }
 
 /**
-   Gets the closest reading in a region defined by the two points of a 
+   Gets the closest reading in a region defined by the two points of a
    rectangle.
    This goes through all of the registered range devices and locks each,
    calls currentReadingBox on it, and then unlocks it.
@@ -6198,7 +6198,7 @@ AREXPORT double ArRobot::checkRangeDevicesCumulativePolar(
    @param x2 the x coordinate of the other rectangle point
    @param y2 the y coordinate of the other rectangle point
    @param readingPos a pointer to a position in which to store the location of
-   @param rangeDevice If not null, then a pointer to the ArRangeDevice 
+   @param rangeDevice If not null, then a pointer to the ArRangeDevice
      that provided the returned reading is placed in this variable.
    the closest position
    @param useLocationDependentDevices If false, ignore sensor devices that are "location dependent". If true, include them in this check.
@@ -6208,7 +6208,7 @@ AREXPORT double ArRobot::checkRangeDevicesCumulativePolar(
 
 AREXPORT double ArRobot::checkRangeDevicesCurrentBox(
 	double x1, double y1, double x2, double y2, ArPose *readingPos,
-	const ArRangeDevice **rangeDevice, 
+	const ArRangeDevice **rangeDevice,
 	bool useLocationDependentDevices) const
 {
 
@@ -6229,7 +6229,7 @@ AREXPORT double ArRobot::checkRangeDevicesCurrentBox(
       device->unlockDevice();
       continue;
     }
-    if (!foundOne || 
+    if (!foundOne ||
 	(tempDist = device->currentReadingBox(x1, y1, x2, y2, &tempPos)) < closest)
     {
       if (!foundOne)
@@ -6257,10 +6257,10 @@ AREXPORT double ArRobot::checkRangeDevicesCurrentBox(
 }
 
 /**
-   Gets the closest reading in a region defined by the two points of a 
+   Gets the closest reading in a region defined by the two points of a
    rectangle.
    This goes through all of the registered range devices and locks each,
-   calls cumulativeReadingBox() on it, and then unlocks it. If a reading was 
+   calls cumulativeReadingBox() on it, and then unlocks it. If a reading was
    found in the box, returns with results.
 
    @param x1 the x coordinate of one of the rectangle points
@@ -6278,7 +6278,7 @@ AREXPORT double ArRobot::checkRangeDevicesCurrentBox(
 
 AREXPORT double ArRobot::checkRangeDevicesCumulativeBox(
 	double x1, double y1, double x2, double y2, ArPose *readingPos,
-	const ArRangeDevice **rangeDevice, 
+	const ArRangeDevice **rangeDevice,
 	bool useLocationDependentDevices) const
 {
 
@@ -6299,7 +6299,7 @@ AREXPORT double ArRobot::checkRangeDevicesCumulativeBox(
       device->unlockDevice();
       continue;
     }
-    if (!foundOne || 
+    if (!foundOne ||
 	(tempDist = device->cumulativeReadingBox(x1, y1, x2, y2, &tempPos)) < closest)
     {
       if (!foundOne)
@@ -6326,9 +6326,9 @@ AREXPORT double ArRobot::checkRangeDevicesCumulativeBox(
   return closest;
 }
 
-/** 
+/**
  *
- * The robot-relative positions of the readings of attached range 
+ * The robot-relative positions of the readings of attached range
  * devices, plus sonar readings stored in this object, will also be updated.
  *
  * @note This simply changes our stored pose value, it does not cause the robot
@@ -6336,7 +6336,7 @@ AREXPORT double ArRobot::checkRangeDevicesCumulativeBox(
  * or the actions system.
  *
     @param pose New pose to set (in absolute world coordinates)
-    @param doCumulative whether to update the cumulative buffers of range devices 
+    @param doCumulative whether to update the cumulative buffers of range devices
 **/
 AREXPORT void ArRobot::moveTo(ArPose pose, bool doCumulative)
 {
@@ -6374,18 +6374,18 @@ AREXPORT void ArRobot::moveTo(ArPose pose, bool doCumulative)
   //ArLog::log(ArLog::Normal, "Robot moved to %.0f %.0f %.1f", getX(), getY(), getTh());
 }
 
-/** 
- * The robot-relative positions of the readings of attached range 
+/**
+ * The robot-relative positions of the readings of attached range
  * devices, plus sonar readings stored in this object, will also be updated.
- * This variant allows you to manually specify a pose to use as the robot's 
- * old pose when updating range device readings (rather than ArRobot's 
+ * This variant allows you to manually specify a pose to use as the robot's
+ * old pose when updating range device readings (rather than ArRobot's
  * currently stored pose).
  *
  * @note This simply changes our stored pose value, it does not cause the robot
  * to drive. Use setVel(), setRotVel(), move(), setHeading(), setDeltaHeading(),
  * or the actions system.
  *
-    @param poseTo the new absolute real world position 
+    @param poseTo the new absolute real world position
     @param poseFrom the original absolute real world position
     @param doCumulative whether to update the cumulative buffers of range devices
 **/
@@ -6429,14 +6429,14 @@ AREXPORT void ArRobot::moveTo(ArPose poseTo, ArPose poseFrom,
 }
 
 /**
- * This transform is applied to all odometric/encoder poses received. 
+ * This transform is applied to all odometric/encoder poses received.
  * If you simply want to transform the robot's final reported pose (as returned
  * by getPose()) to match an external coordinate system, use moveTo() instead.
  * @sa moveTo()
    @param deadReconPos the dead recon position to transform from
    @param globalPos the real world global position to transform to
 **/
-AREXPORT void ArRobot::setEncoderTransform(const ArPose& deadReconPos, 
+AREXPORT void ArRobot::setEncoderTransform(const ArPose& deadReconPos,
 				    const ArPose& globalPos)
 {
   myEncoderTransform.setTransform(deadReconPos, globalPos);
@@ -6445,7 +6445,7 @@ AREXPORT void ArRobot::setEncoderTransform(const ArPose& deadReconPos,
 }
 
 /**
- * This transform is applied to all odometric/encoder poses received. 
+ * This transform is applied to all odometric/encoder poses received.
  * If you simply want to transform the robot's final reported pose (as returned
  * by getPose()) to match an external coordinate system, use moveTo() instead.
  * @sa moveTo()
@@ -6459,7 +6459,7 @@ AREXPORT void ArRobot::setEncoderTransform(const ArPose& transformPos)
 }
 
 /*
- * This transform is applied to all odometric/encoder poses received. 
+ * This transform is applied to all odometric/encoder poses received.
  * If you simply want to transform the robot's final reported pose (as returned
  * by getPose()) to match an external coordinate system, use moveTo() instead.
  * @sa moveTo()
@@ -6484,19 +6484,19 @@ AREXPORT void ArRobot::setDeadReconPose(const ArPose& pose)
   mySetEncoderTransformCBList.invoke();
 }
 
-/** 
-    Applies a transform to the range devices and sonar... 
+/**
+    Applies a transform to the range devices and sonar...
     this is mostly useful for
     translating to/from local/global coords, but may have other uses
     @param trans the transform to apply
     @param doCumulative whether to transform the cumulative buffers or not
-**/    
+**/
 AREXPORT void ArRobot::applyTransform(const ArTransform& trans, bool doCumulative)
 {
   std::list<ArRangeDevice *>::iterator it;
   ArSensorReading *son;
   int i;
-  
+
   for (it = myRangeDeviceList.begin(); it != myRangeDeviceList.end(); it++)
   {
       (*it)->lockDevice();
@@ -6523,7 +6523,7 @@ AREXPORT void ArRobot::setName(const char * name)
     std::list<ArRobot *>::iterator it;
     int i;
     char buf[1024];
- 
+
  if (name != NULL)
   {
     myName = name;
@@ -6531,7 +6531,7 @@ AREXPORT void ArRobot::setName(const char * name)
   else
   {
 
-    
+
 
     robotList = Aria::getRobotList();
     for (i = 1, it = robotList->begin(); it != robotList->end(); it++, i++)
@@ -6556,8 +6556,8 @@ AREXPORT void ArRobot::setName(const char * name)
 /**
    This sets the encoderCorrectionCB, this callback returns the robots
    change in heading, it takes in the change in heading, x, and y,
-   between the previous and current readings.  
-   
+   between the previous and current readings.
+
    @param functor an ArRetFunctor1 created as an ArRetFunctor1C, that
    will be the callback... call this function NULL to clear the
    callback @see getEncoderCorrectionCallback
@@ -6574,34 +6574,34 @@ AREXPORT void ArRobot::setEncoderCorrectionCallback(
 
    @return the callback, or NULL if there isn't one
 **/
-AREXPORT ArRetFunctor1<double, ArPoseWithTime> * 
+AREXPORT ArRetFunctor1<double, ArPoseWithTime> *
 ArRobot::getEncoderCorrectionCallback() const
 {
   return myEncoderCorrectionCB;
 }
 
 /**
-   The direct motion precedence time determines how long actions will be 
+   The direct motion precedence time determines how long actions will be
    ignored after a direct motion command is given.  If the direct motion
-   precedence time is 0, then direct motion will take precedence over actions 
+   precedence time is 0, then direct motion will take precedence over actions
    until a clearDirectMotion command is issued.  This value defaults to 0.
-   @param mSec the number of milliseconds direct movement should trump actions, 
+   @param mSec the number of milliseconds direct movement should trump actions,
    if a negative number is given, then the value will be 0
    @see setDirectMotionPrecedenceTime
    @see clearDirectMotion
 **/
 AREXPORT void ArRobot::setDirectMotionPrecedenceTime(int mSec)
 {
-  if (mSec < 0) 
+  if (mSec < 0)
     myDirectPrecedenceTime = 0;
   else
     myDirectPrecedenceTime = (unsigned int) mSec;
 }
 
 /**
-   The direct motion precedence time determines how long actions will be 
+   The direct motion precedence time determines how long actions will be
    ignored after a direct motion command is given.  If the direct motion
-   precedence time is 0, then direct motion will take precedence over actions 
+   precedence time is 0, then direct motion will take precedence over actions
    until a clearDirectMotion command is issued.  This value defaults to 0.
    @return the number of milliseconds direct movement will trump actions
    @see setDirectMotionPrecedenceTime
@@ -6614,7 +6614,7 @@ AREXPORT unsigned int ArRobot::getDirectMotionPrecedenceTime() const
 
 
 /**
-   This clears the direct motion commands so that actions will be allowed to 
+   This clears the direct motion commands so that actions will be allowed to
    control the robot again.
    @see setDirectMotionPrecedenceTime
    @see getDirectMotionPrecedenceTime
@@ -6663,8 +6663,8 @@ AREXPORT void ArRobot::stopStateReflection()
 AREXPORT bool ArRobot::isDirectMotion() const
 {
   if (myTransType ==  TRANS_NONE && myLastTransType == TRANS_NONE &&
-      myRotType == ROT_NONE && myLastRotType == ROT_NONE && 
-      (!hasLatVel() || 
+      myRotType == ROT_NONE && myLastRotType == ROT_NONE &&
+      (!hasLatVel() ||
        (hasLatVel() && myLatType == LAT_NONE && myLastLatType == LAT_NONE)))
     return false;
   else
@@ -6688,6 +6688,16 @@ AREXPORT void ArRobot::disableMotors()
   comInt(ArCommands::ENABLE, 0);
 }
 
+AREXPORT void ArRobot::enableRobotChargePin()
+{
+  comInt(ArCommands::CHARGE, 1);
+}
+
+AREXPORT void ArRobot::disableRobotChargePin()
+{
+  comInt(ArCommands::CHARGE, 0);
+}
+
 /**
    This command enables the sonars on the robot, if it is connected.
 **/
@@ -6696,13 +6706,13 @@ AREXPORT void ArRobot::enableSonar()
   mySonarEnabled = true;
   myAutonomousDrivingSonarEnabled = false;
   comInt(ArCommands::SONAR, 1);
-  
+
   int ii;
   for (ii = 1; ii <= Aria::getMaxNumSonarBoards(); ii++)
   {
     ArSonarMTX *sonarMTX = findSonar(ii);
-    
-    if (sonarMTX == NULL) 
+
+    if (sonarMTX == NULL)
       continue;
 
     sonarMTX->turnOnTransducers();
@@ -6717,13 +6727,13 @@ AREXPORT void ArRobot::enableAutonomousDrivingSonar()
   mySonarEnabled = false;
   myAutonomousDrivingSonarEnabled = true;
   comInt(ArCommands::SONAR, 1);
-  
+
   int ii;
   for (ii = 1; ii <= Aria::getMaxNumSonarBoards(); ii++)
   {
     ArSonarMTX *sonarMTX = findSonar(ii);
-    
-    if (sonarMTX == NULL) 
+
+    if (sonarMTX == NULL)
       continue;
 
     sonarMTX->disableForAutonomousDriving();
@@ -6738,13 +6748,13 @@ AREXPORT void ArRobot::disableSonar()
   mySonarEnabled = false;
   myAutonomousDrivingSonarEnabled = false;
   comInt(ArCommands::SONAR, 0);
-  
+
   int ii;
   for (ii = 1; ii <= Aria::getMaxNumSonarBoards(); ii++)
   {
     ArSonarMTX *sonarMTX = findSonar(ii);
-    
-    if (sonarMTX == NULL) 
+
+    if (sonarMTX == NULL)
       continue;
 
     sonarMTX->turnOffTransducers();
@@ -6753,11 +6763,11 @@ AREXPORT void ArRobot::disableSonar()
 
 
 /**
-   The state reflection refresh time is the number of milliseconds between 
-   when the state reflector will refresh the robot, if the command hasn't 
-   changed.  The default is 500 milliseconds.  If this number is less than 
+   The state reflection refresh time is the number of milliseconds between
+   when the state reflector will refresh the robot, if the command hasn't
+   changed.  The default is 500 milliseconds.  If this number is less than
    the cyle time, it'll simply happen every cycle.
-   @param mSec the refresh time, in milliseconds, non-negative, if negative is 
+   @param mSec the refresh time, in milliseconds, non-negative, if negative is
    given, then the value will be 0
 **/
 AREXPORT void ArRobot::setStateReflectionRefreshTime(int mSec)
@@ -6769,9 +6779,9 @@ AREXPORT void ArRobot::setStateReflectionRefreshTime(int mSec)
 }
 
 /**
-   The state reflection refresh time is the number of milliseconds between 
-   when the state reflector will refresh the robot, if the command hasn't 
-   changed.  The default is 500 milliseconds.  If this number is less than 
+   The state reflection refresh time is the number of milliseconds between
+   when the state reflector will refresh the robot, if the command hasn't
+   changed.  The default is 500 milliseconds.  If this number is less than
    the cyle time, it'll simply happen every cycle.
    @return the state reflection refresh time
 **/
@@ -6791,17 +6801,17 @@ AREXPORT int ArRobot::getStateReflectionRefreshTime() const
    @param keyHandler the key handler to attach
 
    @param exitOnEscape whether to exit when escape is pressed or not
-   
+
    @param useExitNotShutdown if true then Aria::exit will be called
    instead of Aria::shutdown if it tries to exit
 **/
-AREXPORT void ArRobot::attachKeyHandler(ArKeyHandler *keyHandler, 
-					bool exitOnEscape, 
+AREXPORT void ArRobot::attachKeyHandler(ArKeyHandler *keyHandler,
+					bool exitOnEscape,
 					bool useExitNotShutdown)
 {
   if (myKeyHandlerCB != NULL)
     delete myKeyHandlerCB;
-  myKeyHandlerCB = new ArFunctorC<ArKeyHandler>(keyHandler, 
+  myKeyHandlerCB = new ArFunctorC<ArKeyHandler>(keyHandler,
 					    &ArKeyHandler::checkKeys);
   addSensorInterpTask("Key Handler", 50, myKeyHandlerCB);
 
@@ -6838,8 +6848,8 @@ AREXPORT void ArRobot::setPacketsReceivedTracking(bool packetsReceivedTracking)
   myPacketsReceivedTracking = packetsReceivedTracking;
 	myReceiver.setTracking(myPacketsReceivedTracking);
 	myReceiver.setTrackingLogName("MicroController");
-  myPacketsReceivedTrackingCount = 0; 
-  myPacketsReceivedTrackingStarted.setToNow(); 
+  myPacketsReceivedTrackingCount = 0;
+  myPacketsReceivedTrackingStarted.setToNow();
 }
 
 void ArRobot::ariaExitCallback()
@@ -6854,12 +6864,12 @@ void ArRobot::ariaExitCallback()
    2005.  It'll just be CHARGING_UNKNOWN on everything else always.
 
    @note Some robots don't actively manage their own charge state (Pioneer 3, Amigo),
-   instead this is done by the external charger hardware. ChargeState is most 
+   instead this is done by the external charger hardware. ChargeState is most
    revelant on uARCS systems (i.e. PatrolBot).
    If the firmware for the Pioneer based robots is newer and supports charge state,
    charge state will just always be CHARGING_NOT. If the firmware on these robots is
    older and does not support, it, this function will return CHARGING_UNKNOWN.
-   (on these robots, you might be able to guess what the charger is doing based on 
+   (on these robots, you might be able to guess what the charger is doing based on
    reported battery voltage, but this is not a direct measure.)
  **/
 AREXPORT ArRobot::ChargeState ArRobot::getChargeState() const
@@ -6868,9 +6878,9 @@ AREXPORT ArRobot::ChargeState ArRobot::getChargeState() const
 }
 
 /**
-   
+
  **/
-AREXPORT void ArRobot::setChargeState(ArRobot::ChargeState chargeState) 
+AREXPORT void ArRobot::setChargeState(ArRobot::ChargeState chargeState)
 {
   myOverriddenChargeState = true;
   myChargeState = chargeState;
@@ -6884,7 +6894,7 @@ AREXPORT bool ArRobot::isChargerPowerGood() const
     return (getFlags() & ArUtil::BIT10);
 }
 
-AREXPORT void ArRobot::setIsChargerPowerGood(bool isChargerPowerGood) 
+AREXPORT void ArRobot::setIsChargerPowerGood(bool isChargerPowerGood)
 {
   myOverriddenIsChargerPowerGood = true;
   myIsChargerPowerGood = isChargerPowerGood;
@@ -6917,7 +6927,7 @@ AREXPORT void ArRobot::setIgnoreMicroControllerBatteryInfo(
   myIgnoreMicroControllerBatteryInfo = ignoreMicroControllerBatteryInfo;
 }
 
-AREXPORT void ArRobot::setBatteryInfo(double realBatteryVoltage, 
+AREXPORT void ArRobot::setBatteryInfo(double realBatteryVoltage,
 				      double normalizedBatteryVoltage,
 				      bool haveStateOfCharge,
 				      double stateOfCharge)
@@ -6934,22 +6944,22 @@ AREXPORT void ArRobot::setBatteryInfo(double realBatteryVoltage,
   {
     myStateOfCharge = stateOfCharge;
     myStateOfChargeSetTime.setToNow();
-  }  
+  }
 }
 
 
-/** @since 2.7.0 
-  @note Do not call this method directly 
+/** @since 2.7.0
+  @note Do not call this method directly
   if using ArLaserConnector, it will automatically add laser(s).
   @internal
 */
-AREXPORT bool ArRobot::addLaser(ArLaser *laser, int laserNumber, 
+AREXPORT bool ArRobot::addLaser(ArLaser *laser, int laserNumber,
 				bool addAsRangeDevice)
 {
   std::map<int, ArLaser *>::iterator it;
   if (laser == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::addLaser: Tried to add NULL laser as laser number %d",
 	       laserNumber);
     return false;
@@ -6958,9 +6968,9 @@ AREXPORT bool ArRobot::addLaser(ArLaser *laser, int laserNumber,
   {
     if ((*it).second == laser)
     {
-      ArLog::log(ArLog::Verbose, 
+      ArLog::log(ArLog::Verbose,
 		 "Tried to add laser %s as number %d (and as a range device) but already have that laser, doing nothing",
-		 laser->getName(), laserNumber);    
+		 laser->getName(), laserNumber);
       return true;
     }
     ArLog::log(ArLog::Normal, "ArRobot::addLaser: Tried to add laser %s as laser number %d but there is already a laser of that number (called %s)",
@@ -6971,31 +6981,31 @@ AREXPORT bool ArRobot::addLaser(ArLaser *laser, int laserNumber,
   myLaserMap[laserNumber] = laser;
   if (addAsRangeDevice)
   {
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "Added laser %s as number %d (and as a range device)",
-	       laser->getName(), laserNumber);    
+	       laser->getName(), laserNumber);
     remRangeDevice(laser);
     addRangeDevice(laser);
   }
   else
   {
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "Added laser %s as number %d (but not a range device)",
-	       laser->getName(), laserNumber);    
+	       laser->getName(), laserNumber);
   }
   return true;
 }
 
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remLaser(ArLaser *laser, bool removeAsRangeDevice)
 {
   if (laser == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::remLaser: Passed NULL laser to remove");
       return false;
   }
@@ -7006,28 +7016,28 @@ AREXPORT bool ArRobot::remLaser(ArLaser *laser, bool removeAsRangeDevice)
     {
       if (removeAsRangeDevice)
       {
-	ArLog::log(ArLog::Normal, 
-		   "ArRobot::remLaser: Removing laser %s (num %d) (and removing as range device)", 
+	ArLog::log(ArLog::Normal,
+		   "ArRobot::remLaser: Removing laser %s (num %d) (and removing as range device)",
 		   laser->getName(), (*it).first);
 	remRangeDevice((*it).second);
       }
-      else 
+      else
       {
-	ArLog::log(ArLog::Normal, 
-		   "ArRobot::remLaser: Removing laser %s (num %d) (will not remove as range device)", 
-		   laser->getName(), (*it).first);  
+	ArLog::log(ArLog::Normal,
+		   "ArRobot::remLaser: Removing laser %s (num %d) (will not remove as range device)",
+		   laser->getName(), (*it).first);
       }
       myLaserMap.erase(it);
       return true;
     }
   }
-  ArLog::log(ArLog::Normal, 
-	     "ArRobot::remLaser: Could not find laser %s to remove", 
+  ArLog::log(ArLog::Normal,
+	     "ArRobot::remLaser: Could not find laser %s to remove",
 	     laser->getName());
   return false;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remLaser(int laserNumber, bool removeAsRangeDevice)
@@ -7035,32 +7045,32 @@ AREXPORT bool ArRobot::remLaser(int laserNumber, bool removeAsRangeDevice)
   std::map<int, ArLaser *>::iterator it;
   if ((it = myLaserMap.find(laserNumber)) == myLaserMap.end())
   {
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remLaser: Could not find laser %d to remove", 
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remLaser: Could not find laser %d to remove",
 	       laserNumber);
     return false;
-  
+
   }
 
   if (removeAsRangeDevice)
   {
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remLaser: Removing laser %s (num %d) (and removing as range device)", 
-	       (*it).second->getName(), (*it).first);  
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remLaser: Removing laser %s (num %d) (and removing as range device)",
+	       (*it).second->getName(), (*it).first);
     remRangeDevice((*it).second);
   }
   else
   {
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remLaser: Removing laser %s (num %d) (will not remove as range device)", 
-	       (*it).second->getName(), (*it).first);  
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remLaser: Removing laser %s (num %d) (will not remove as range device)",
+	       (*it).second->getName(), (*it).first);
   }
-    
+
   myLaserMap.erase(it);
   return true;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
   @see ArLaserConnector
 */
 AREXPORT const ArLaser *ArRobot::findLaser(int laserNumber) const
@@ -7072,7 +7082,7 @@ AREXPORT const ArLaser *ArRobot::findLaser(int laserNumber) const
     return (*it).second;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLaserConnector
 */
 AREXPORT ArLaser *ArRobot::findLaser(int laserNumber)
@@ -7083,7 +7093,7 @@ AREXPORT ArLaser *ArRobot::findLaser(int laserNumber)
     return myLaserMap[laserNumber];
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLaserConnector
 */
 AREXPORT const std::map<int, ArLaser *> *ArRobot::getLaserMap() const
@@ -7092,15 +7102,15 @@ AREXPORT const std::map<int, ArLaser *> *ArRobot::getLaserMap() const
 }
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLaserConnector
 */
-AREXPORT std::map<int, ArLaser *> *ArRobot::getLaserMap() 
+AREXPORT std::map<int, ArLaser *> *ArRobot::getLaserMap()
 {
   return &myLaserMap;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLaserConnector
 */
 AREXPORT bool ArRobot::hasLaser(ArLaser *device) const
@@ -7114,8 +7124,8 @@ AREXPORT bool ArRobot::hasLaser(ArLaser *device) const
 }
 
 
-/** @since 2.7.0 
-  @note Do not call this method directly 
+/** @since 2.7.0
+  @note Do not call this method directly
   if using ArBatteryConnector, it will automatically add battery(s).
   @internal
 */
@@ -7124,7 +7134,7 @@ AREXPORT bool ArRobot::addBattery(ArBatteryMTX *battery, int batteryNumber)
   std::map<int, ArBatteryMTX *>::iterator it;
   if (battery == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::addBattery: Tried to add NULL battery as battery number %d",
 	       batteryNumber);
     return false;
@@ -7133,9 +7143,9 @@ AREXPORT bool ArRobot::addBattery(ArBatteryMTX *battery, int batteryNumber)
   {
     if ((*it).second == battery)
     {
-      ArLog::log(ArLog::Verbose, 
+      ArLog::log(ArLog::Verbose,
 		 "Tried to add battery %s as number %d but already have that battery, doing nothing",
-		 battery->getName(), batteryNumber);    
+		 battery->getName(), batteryNumber);
       return true;
     }
     ArLog::log(ArLog::Normal, "ArRobot::addBattery: Tried to add battery %s as battery number %d but there is already a battery of that number (called %s)",
@@ -7144,21 +7154,21 @@ AREXPORT bool ArRobot::addBattery(ArBatteryMTX *battery, int batteryNumber)
     return false;
   }
   myBatteryMap[batteryNumber] = battery;
-  ArLog::log(ArLog::Verbose, 
+  ArLog::log(ArLog::Verbose,
 	       "Added battery %s as number %d",
-	       battery->getName(), batteryNumber);    
+	       battery->getName(), batteryNumber);
   return true;
 }
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remBattery(ArBatteryMTX *battery)
 {
   if (battery == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::remBattery: Passed NULL battery to remove");
       return false;
   }
@@ -7167,20 +7177,20 @@ AREXPORT bool ArRobot::remBattery(ArBatteryMTX *battery)
   {
     if ((*it).second == battery)
     {
-	ArLog::log(ArLog::Normal, 
-		   "ArRobot::remBattery: Removing battery %s (num %d)", 
-		   battery->getName(), (*it).first);  
+	ArLog::log(ArLog::Normal,
+		   "ArRobot::remBattery: Removing battery %s (num %d)",
+		   battery->getName(), (*it).first);
       myBatteryMap.erase(it);
       return true;
     }
   }
-  ArLog::log(ArLog::Normal, 
-	     "ArRobot::remBattery: Could not find battery %s to remove", 
+  ArLog::log(ArLog::Normal,
+	     "ArRobot::remBattery: Could not find battery %s to remove",
 	     battery->getName());
   return false;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remBattery(int batteryNumber)
@@ -7188,22 +7198,22 @@ AREXPORT bool ArRobot::remBattery(int batteryNumber)
   std::map<int, ArBatteryMTX *>::iterator it;
   if ((it = myBatteryMap.find(batteryNumber)) == myBatteryMap.end())
   {
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remBattery: Could not find battery %d to remove", 
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remBattery: Could not find battery %d to remove",
 	       batteryNumber);
     return false;
-  
+
   }
 
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remBattery: Removing battery %s (num %d) ", 
-	       (*it).second->getName(), (*it).first);  
-    
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remBattery: Removing battery %s (num %d) ",
+	       (*it).second->getName(), (*it).first);
+
   myBatteryMap.erase(it);
   return true;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
   @see ArBatteryConnector
 */
 AREXPORT const ArBatteryMTX *ArRobot::findBattery(int batteryNumber) const
@@ -7215,7 +7225,7 @@ AREXPORT const ArBatteryMTX *ArRobot::findBattery(int batteryNumber) const
     return (*it).second;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArBatteryConnector
 */
 AREXPORT ArBatteryMTX *ArRobot::findBattery(int batteryNumber)
@@ -7226,7 +7236,7 @@ AREXPORT ArBatteryMTX *ArRobot::findBattery(int batteryNumber)
     return myBatteryMap[batteryNumber];
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArBatteryConnector
 */
 AREXPORT const std::map<int, ArBatteryMTX *> *ArRobot::getBatteryMap() const
@@ -7235,15 +7245,15 @@ AREXPORT const std::map<int, ArBatteryMTX *> *ArRobot::getBatteryMap() const
 }
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArBatteryConnector
 */
-AREXPORT std::map<int, ArBatteryMTX *> *ArRobot::getBatteryMap() 
+AREXPORT std::map<int, ArBatteryMTX *> *ArRobot::getBatteryMap()
 {
   return &myBatteryMap;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArBatteryConnector
 */
 AREXPORT bool ArRobot::hasBattery(ArBatteryMTX *device) const
@@ -7257,8 +7267,8 @@ AREXPORT bool ArRobot::hasBattery(ArBatteryMTX *device) const
 }
 
 
-/** @since 2.7.0 
-  @note Do not call this method directly 
+/** @since 2.7.0
+  @note Do not call this method directly
   if using ArLCDConnector, it will automatically add lcd(s).
   @internal
 */
@@ -7267,7 +7277,7 @@ AREXPORT bool ArRobot::addLCD(ArLCDMTX *lcd, int lcdNumber)
   std::map<int, ArLCDMTX *>::iterator it;
   if (lcd == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::addLCD: Tried to add NULL lcd as lcd number %d",
 	       lcdNumber);
     return false;
@@ -7276,9 +7286,9 @@ AREXPORT bool ArRobot::addLCD(ArLCDMTX *lcd, int lcdNumber)
   {
     if ((*it).second == lcd)
     {
-      ArLog::log(ArLog::Verbose, 
+      ArLog::log(ArLog::Verbose,
 		 "Tried to add lcd %s as number %d but already have that lcd, doing nothing",
-		 lcd->getName(), lcdNumber);    
+		 lcd->getName(), lcdNumber);
       return true;
     }
     ArLog::log(ArLog::Normal, "ArRobot::addLCD: Tried to add lcd %s as lcd number %d but there is already a lcd of that number (called %s)",
@@ -7287,21 +7297,21 @@ AREXPORT bool ArRobot::addLCD(ArLCDMTX *lcd, int lcdNumber)
     return false;
   }
   myLCDMap[lcdNumber] = lcd;
-  ArLog::log(ArLog::Verbose, 
+  ArLog::log(ArLog::Verbose,
 	       "Added lcd %s as number %d",
-	       lcd->getName(), lcdNumber);    
+	       lcd->getName(), lcdNumber);
   return true;
 }
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remLCD(ArLCDMTX *lcd)
 {
   if (lcd == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::remLCD: Passed NULL lcd to remove");
       return false;
   }
@@ -7310,20 +7320,20 @@ AREXPORT bool ArRobot::remLCD(ArLCDMTX *lcd)
   {
     if ((*it).second == lcd)
     {
-	ArLog::log(ArLog::Normal, 
-		   "ArRobot::remLCD: Removing lcd %s (num %d)", 
-		   lcd->getName(), (*it).first);  
+	ArLog::log(ArLog::Normal,
+		   "ArRobot::remLCD: Removing lcd %s (num %d)",
+		   lcd->getName(), (*it).first);
       myLCDMap.erase(it);
       return true;
     }
   }
-  ArLog::log(ArLog::Normal, 
-	     "ArRobot::remLCD: Could not find lcd %s to remove", 
+  ArLog::log(ArLog::Normal,
+	     "ArRobot::remLCD: Could not find lcd %s to remove",
 	     lcd->getName());
   return false;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remLCD(int lcdNumber)
@@ -7331,22 +7341,22 @@ AREXPORT bool ArRobot::remLCD(int lcdNumber)
   std::map<int, ArLCDMTX *>::iterator it;
   if ((it = myLCDMap.find(lcdNumber)) == myLCDMap.end())
   {
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remLCD: Could not find lcd %d to remove", 
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remLCD: Could not find lcd %d to remove",
 	       lcdNumber);
     return false;
-  
+
   }
 
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remLCD: Removing lcd %s (num %d) ", 
-	       (*it).second->getName(), (*it).first);  
-    
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remLCD: Removing lcd %s (num %d) ",
+	       (*it).second->getName(), (*it).first);
+
   myLCDMap.erase(it);
   return true;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
   @see ArLCDConnector
 */
 AREXPORT const ArLCDMTX *ArRobot::findLCD(int lcdNumber) const
@@ -7358,7 +7368,7 @@ AREXPORT const ArLCDMTX *ArRobot::findLCD(int lcdNumber) const
     return (*it).second;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLCDConnector
 */
 AREXPORT ArLCDMTX *ArRobot::findLCD(int lcdNumber)
@@ -7369,7 +7379,7 @@ AREXPORT ArLCDMTX *ArRobot::findLCD(int lcdNumber)
     return myLCDMap[lcdNumber];
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLCDConnector
 */
 AREXPORT const std::map<int, ArLCDMTX *> *ArRobot::getLCDMap() const
@@ -7378,15 +7388,15 @@ AREXPORT const std::map<int, ArLCDMTX *> *ArRobot::getLCDMap() const
 }
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLCDConnector
 */
-AREXPORT std::map<int, ArLCDMTX *> *ArRobot::getLCDMap() 
+AREXPORT std::map<int, ArLCDMTX *> *ArRobot::getLCDMap()
 {
   return &myLCDMap;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArLCDConnector
 */
 AREXPORT bool ArRobot::hasLCD(ArLCDMTX *device) const
@@ -7399,8 +7409,8 @@ AREXPORT bool ArRobot::hasLCD(ArLCDMTX *device) const
   return false;
 }
 
-/** @since 2.7.0 
-  @note Do not call this method directly 
+/** @since 2.7.0
+  @note Do not call this method directly
   if using ArBatteryConnector, it will automatically add battery(s).
   @internal
 */
@@ -7409,7 +7419,7 @@ AREXPORT bool ArRobot::addSonar(ArSonarMTX *sonar, int sonarNumber)
   std::map<int, ArSonarMTX *>::iterator it;
   if (sonar == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::addSonar: Tried to add NULL sonar board as sonar number %d",
 	       sonarNumber);
     return false;
@@ -7418,9 +7428,9 @@ AREXPORT bool ArRobot::addSonar(ArSonarMTX *sonar, int sonarNumber)
   {
     if ((*it).second == sonar)
     {
-      ArLog::log(ArLog::Verbose, 
+      ArLog::log(ArLog::Verbose,
 		 "Tried to add sonar board %s as number %d but already have that sonar, doing nothing",
-		 sonar->getName(), sonarNumber);    
+		 sonar->getName(), sonarNumber);
       return true;
     }
     ArLog::log(ArLog::Normal, "ArRobot::addSonar: Tried to add sonar board %s as sonar number %d but there is already a sonar of that number (called %s)",
@@ -7429,21 +7439,21 @@ AREXPORT bool ArRobot::addSonar(ArSonarMTX *sonar, int sonarNumber)
     return false;
   }
   mySonarMap[sonarNumber] = sonar;
-  ArLog::log(ArLog::Verbose, 
+  ArLog::log(ArLog::Verbose,
 	       "Added sonar board %s as number %d",
-	       sonar->getName(), sonarNumber);    
+	       sonar->getName(), sonarNumber);
   return true;
 }
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remSonar(ArSonarMTX *sonar)
 {
   if (sonar == NULL)
   {
-    ArLog::log(ArLog::Normal, 
+    ArLog::log(ArLog::Normal,
 	       "ArRobot::remSonar: Passed NULL sonar board to remove");
       return false;
   }
@@ -7452,20 +7462,20 @@ AREXPORT bool ArRobot::remSonar(ArSonarMTX *sonar)
   {
     if ((*it).second == sonar)
     {
-	ArLog::log(ArLog::Normal, 
-		   "ArRobot::remSonar: Removing sonar board %s (num %d)", 
-		   sonar->getName(), (*it).first);  
+	ArLog::log(ArLog::Normal,
+		   "ArRobot::remSonar: Removing sonar board %s (num %d)",
+		   sonar->getName(), (*it).first);
       mySonarMap.erase(it);
       return true;
     }
   }
-  ArLog::log(ArLog::Normal, 
-	     "ArRobot::remSonar: Could not find sonar board %s to remove", 
+  ArLog::log(ArLog::Normal,
+	     "ArRobot::remSonar: Could not find sonar board %s to remove",
 	     sonar->getName());
   return false;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @internal
 */
 AREXPORT bool ArRobot::remSonar(int sonarNumber)
@@ -7473,22 +7483,22 @@ AREXPORT bool ArRobot::remSonar(int sonarNumber)
   std::map<int, ArSonarMTX *>::iterator it;
   if ((it = mySonarMap.find(sonarNumber)) == mySonarMap.end())
   {
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remSonar: Could not find sonar board %d to remove", 
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remSonar: Could not find sonar board %d to remove",
 	       sonarNumber);
     return false;
-  
+
   }
 
-    ArLog::log(ArLog::Normal, 
-	       "ArRobot::remSonar: Removing sonar board %s (num %d) ", 
-	       (*it).second->getName(), (*it).first);  
-    
+    ArLog::log(ArLog::Normal,
+	       "ArRobot::remSonar: Removing sonar board %s (num %d) ",
+	       (*it).second->getName(), (*it).first);
+
   mySonarMap.erase(it);
   return true;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
   @see ArSonarConnector
 */
 AREXPORT const ArSonarMTX *ArRobot::findSonar(int sonarNumber) const
@@ -7500,7 +7510,7 @@ AREXPORT const ArSonarMTX *ArRobot::findSonar(int sonarNumber) const
     return (*it).second;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArSonarConnector
 */
 AREXPORT ArSonarMTX *ArRobot::findSonar(int sonarNumber)
@@ -7511,7 +7521,7 @@ AREXPORT ArSonarMTX *ArRobot::findSonar(int sonarNumber)
     return mySonarMap[sonarNumber];
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArSonarConnector
 */
 AREXPORT const std::map<int, ArSonarMTX *> *ArRobot::getSonarMap() const
@@ -7520,15 +7530,15 @@ AREXPORT const std::map<int, ArSonarMTX *> *ArRobot::getSonarMap() const
 }
 
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArSonarConnector
 */
-AREXPORT std::map<int, ArSonarMTX *> *ArRobot::getSonarMap() 
+AREXPORT std::map<int, ArSonarMTX *> *ArRobot::getSonarMap()
 {
   return &mySonarMap;
 }
 
-/** @since 2.7.0 
+/** @since 2.7.0
     @see ArSonarConnector
 */
 AREXPORT bool ArRobot::hasSonar(ArSonarMTX *device) const
@@ -7545,7 +7555,7 @@ AREXPORT bool ArRobot::hasSonar(ArSonarMTX *device) const
 
 /**
    @param from the pose with time to apply the offset from... it applies the encoder mostion from the time on this to the to param
-   
+
    @param to the time to find the offset to
 
    @param result the pose to put the result in
@@ -7553,19 +7563,19 @@ AREXPORT bool ArRobot::hasSonar(ArSonarMTX *device) const
    @return This returns the same way that ArInterpolation::getPose does...
 @see ArInterpolation::getPose
 */
-AREXPORT int ArRobot::applyEncoderOffset(ArPoseWithTime from, ArTime to, 
+AREXPORT int ArRobot::applyEncoderOffset(ArPoseWithTime from, ArTime to,
 					 ArPose *result)
 {
 
   ArPose encoderPoseFrom;
   ArPose globalPoseFrom;
-  
+
   ArPose encoderPoseTo;
   ArPose globalPoseTo;
 
   int retFrom;
   int retTo;
-  if ((retFrom = getEncoderPoseInterpPosition(from.getTime(), 
+  if ((retFrom = getEncoderPoseInterpPosition(from.getTime(),
 					     &encoderPoseFrom)) >= 0)
   {
     if ((retTo = getEncoderPoseInterpPosition(to, &encoderPoseTo)) >= 0)
@@ -7576,9 +7586,9 @@ AREXPORT int ArRobot::applyEncoderOffset(ArPoseWithTime from, ArTime to,
       ArPose retPose;
       retPose = from + offset;
       /*
-      ArLog::log(ArLog::Normal, 
-		 "%.0f %.0f %.1f + %.0f %.0f %.1f = %.0f %.0f %.1f (from %d to %d)", 
-		 from.getX(), from.getY(), from.getTh(), 
+      ArLog::log(ArLog::Normal,
+		 "%.0f %.0f %.1f + %.0f %.0f %.1f = %.0f %.0f %.1f (from %d to %d)",
+		 from.getX(), from.getY(), from.getTh(),
 		 offset.getX(), offset.getY(), offset.getTh(),
 		 retPose.getX(), retPose.getY(), retPose.getTh(),
 		 retFrom, retTo);
@@ -7589,7 +7599,7 @@ AREXPORT int ArRobot::applyEncoderOffset(ArPoseWithTime from, ArTime to,
     }
     else
     {
-      ArLog::log(ArLog::Verbose, 
+      ArLog::log(ArLog::Verbose,
 		 "ArRobot::applyEncoderOffset: Can't find to offset, ret %d",
 		 retTo);
       return retTo;
@@ -7597,7 +7607,7 @@ AREXPORT int ArRobot::applyEncoderOffset(ArPoseWithTime from, ArTime to,
   }
   else
   {
-    ArLog::log(ArLog::Verbose, 
+    ArLog::log(ArLog::Verbose,
 	       "ArRobot::applyEncoderOffset: Can't find from (%d ms ago) offset, ret %d",
 	       retFrom, from.getTime().mSecSince());
     return retFrom;

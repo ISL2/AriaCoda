@@ -26,14 +26,14 @@ Copyright (C) 2016-2018 Omron Adept Technologies, Inc.
 
 /// A class containing names for most robot microcontroller system commands
 /**
-   A class with an enum of the commands that can be sent to the robot, see the 
+   A class with an enum of the commands that can be sent to the robot, see the
    robot operations manual for more detailed descriptions.
  @ingroup OptionalClasses
 */
 class ArCommands
 {
 public:
-  enum Commands { 
+  enum Commands {
   PULSE = 0, ///< none, keep alive command, so watchdog doesn't trigger
   OPEN = 1, ///< none, sent after connection to initiate connection
   CLOSE = 2, ///< none, sent to close the connection to the robot
@@ -58,9 +58,9 @@ public:
   RVEL = 21, ///< int, set rotational velocity (deg/sec)
   DCHEAD = 22, ///< int, colbert relative heading setpoint (degrees)
   SETRA = 23, ///< int, sets rotational accel(+) or decel(-) (deg/sec)
-  IMUREQUEST = 26,///< int, requests IMU packets (1 for 1, 2 for continuous, 0 to stop) 
-  SEEKURIMU = 26, 
-  SONAR = 28, ///< int, enable (1) or disable (0) sonar 
+  IMUREQUEST = 26,///< int, requests IMU packets (1 for 1, 2 for continuous, 0 to stop)
+  SEEKURIMU = 26,
+  SONAR = 28, ///< int, enable (1) or disable (0) sonar
   STOP = 29, ///< int, stops the robot
   DIGOUT = 30, ///< int, sets the digout lines
   //TIMER = 31, ... no clue about this one
@@ -73,12 +73,12 @@ public:
   GRIPPERPACREQUEST = 37, ///< p2 gripper packet request
   IOREQUEST = 40, ///< request iopackets from p2os
   PTUPOS = 41, ///< most-sig byte is port number, least-sig byte is pulse width
-  TTY2 = 42, ///< string, send string argument to serial dev connected to aux1 
+  TTY2 = 42, ///< string, send string argument to serial dev connected to aux1
   GETAUX = 43, ///< int, requests 1-200 bytes from aux1 serial channel, 0 flush
   BUMPSTALL = 44, /**< int, stop and register a stall if front (1), rear (2),
 		   or both (3) bump rings are triggered, Off (default) is 0 */
-  TCM2 = 45, ///< TCM2 module commands, see tcm2 manual for details 
-  JOYDRIVE = 47, /**< Command to tell p2os to drive with the joystick 
+  TCM2 = 45, ///< TCM2 module commands, see tcm2 manual for details
+  JOYDRIVE = 47, /**< Command to tell p2os to drive with the joystick
 		    plugged into the robot */
   MOVINGBLINK = 49, ///< int, 1 to blink lamp quickly before moving, 0 not to (for patrolbot)
   HOSTBAUD = 50, ///< int, set baud rate for host port - 0=9600, 1=19200, 2=38400, 3=57600, 4=115200
@@ -92,12 +92,13 @@ public:
   BATTERYINFO = 62, ///< int, requests battery info packets, 0 to stop, 1 for 1, 2 for continuous
   TTY3 = 66,
   GETAUX2 = 67,
+  CHARGE = 68, ///< int, charge the robot, 0 to stop, 1 to start
   BATTEST = 250,
 
   // SRISIM specific:
   LOADPARAM = 61, ///< @deprecated  only supported by SRISim. Conflicts with GETAUX3
   OLDSIM_LOADPARAM = 61, ///< @deprecated only supported by SRISim. Conflicts with GETAUX3
-  ENDSIM = 62, ///< @deprecated use SIM_EXIT 
+  ENDSIM = 62, ///< @deprecated use SIM_EXIT
   OLDSIM_EXIT = 62, ///< @deprecated use SIM_EXIT
   LOADWORLD = 63, ///< @deprecated only supported by SRISim
   OLDSIM_LOADWORLD = 63, ///< @deprecated only supported by SRISim
@@ -109,8 +110,8 @@ public:
 
   // SRISIM specific:
   // SETORIGINX and SETORIGINY overlap with TTY3 and GETAUX2 so they are disabled:
-  //SETSIMORIGINX = 66, 
-  //SETSIMORIGINY = 67, 
+  //SETSIMORIGINX = 66,
+  //SETSIMORIGINY = 67,
   //OLDSIM_SETORIGINX = 66,
   //OLDSIM_SETORIGINY = 67,
   SETSIMORIGINTH = 68, ///< @deprecated use SIM_SET_POSE
@@ -120,7 +121,7 @@ public:
 
   // AmigoBot-H8 specific:
   SOUND = 90, ///< int, AmigoBot (old H8 model) specific, plays sound with given number
-  PLAYLIST = 91, /**< int, AmigoBot (old H8 model) specific, requests name of sound, 
+  PLAYLIST = 91, /**< int, AmigoBot (old H8 model) specific, requests name of sound,
 		    0 for all, otherwise for specific sound */
   SOUNDTOG = 92, ///< int, AmigoBot (old H8 model) specific, enable(1) or disable(0) sound
 
@@ -179,7 +180,7 @@ public:
 
   POWERONLIKE_RESET = 253
   };
-  
+
 };
 
 #endif // ARCOMMANDS_H
