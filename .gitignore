@@ -45,3 +45,11 @@ debian/source
 debian/tmp
 debian/.debhelper
 tmp
+examples/demo
+examples/mtxPower
+examples/seekurPower
+lib/
+utils/genCommandLineOptionDocs
+utils/makeParams
+versionstring
+
